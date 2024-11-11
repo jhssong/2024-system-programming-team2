@@ -1,21 +1,35 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <curses.h>
-#include "title_bar.h"
 #include "constant.h"
+#include "util.h"
+#include "greeting_menu.h"
 
 int main() {
-	get_window_size();
+	get_window_size();  	// Get window size and save it in constant.c
+	initscr();  			// Turns on curses
+	tty_mode(0);			// Save original settings
+	set_cr_noecho_mode();	// Set non-blocking mode
 
-	initscr();  // turns on curses
-	clear(); 	// clear screen
+	int selected_menu = display_greeting_menus();
 
-	display_title_bar(window_width);
-	move(10, 20);
-	addstr("Welcome!");
+	switch (selected_menu) {
+		case 0:				// Enter existing team
+			break;
+		case 1: 			// Create new team
+			break;
+		case 2: 			// About
+			break;
+		case 3: 			// Quit
+			break;
+		default:
+			fprintf(stderr, "Something went wrong with selecting menus");
+			exit(EXIT_FAILURE);
+	}
 
-	refresh();	// update the screen
-	getch();	// wait for user input 
-	endwin();	// turn off curses
+	getchar();				// TODO Only for debug remove before publish
+	tty_mode(1);			// Restore original settings
+	endwin();				// turn off curses
 
 	return 0;
 }
