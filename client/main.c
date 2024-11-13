@@ -9,6 +9,7 @@
 int main() {
 	get_window_size();  									// Get window size and save it in constant.c
 	initscr();  											// Turns on curses
+	curs_set(0);
 
 	int selected_menu = -1;
 

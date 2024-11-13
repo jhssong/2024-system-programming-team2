@@ -3,26 +3,20 @@
 #include <curses.h>
 #include "constant.h"
 #include "title_bar.h"
+#include "util.h"
 
 #define QUESTION_START_LINE 3
 
-const char* TITLE = "Creat New Team";
+const char* CREATE_NEW_TEAM_TITLE = "Creat New Team";
 
 const char* TEAM_NAME_QUESTION = "What is the team name? (max 256 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
-
-void show_title() {
-	move(QUESTION_START_LINE, 0);
-	printw("====================\n");
-	printw("  %s\n", TITLE);
-	printw("====================\n");
-}
 
 void display_create_new_team() {
 	clear();
 	display_title_bar();
 
-	show_title();
+	show_title(QUESTION_START_LINE, CREATE_NEW_TEAM_TITLE);
 
 	// move(QUESTION_START_LINE, 0);
 	printw("\n");
