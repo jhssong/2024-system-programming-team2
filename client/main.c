@@ -7,45 +7,31 @@
 #include "create_new_team.h"
 
 int main() {
-	 initscr();            // curses 시작
-    cbreak();             // 라인 버퍼링 해제
-    echo();               // 입력한 값을 화면에 출력
-    // char text[100];
+	get_window_size();  									// Get window size and save it in constant.c
+	initscr();  											// Turns on curses
 
-    // printw("Enter text: ");
-    // refresh();
+	int selected_menu = -1;
 
-    // // fscanf(stdin, "%s", text);  // 표준 입력으로 값 받기
-	//  getstr(text);
-    // printw("You entered: %s\n", text);
-    // refresh();
+	while (selected_menu != 3) {
+		selected_menu = display_greeting_menus();
 
-    // getch();
-    // endwin();             // curses 종료
-    // return 0;
-	get_window_size();  	// Get window size and save it in constant.c
-	initscr();  			// Turns on curses
-
-	int selected_menu = display_greeting_menus();
-
-	switch (selected_menu) {
-		case 0:				// Enter existing team
-			break;
-		case 1: 			// Create new team
-			display_create_new_team();
-			break;
-		case 2: 			// About
-			break;
-        case 3: 			// Quit
-			break;
-		default:
-			fprintf(stderr, "Something went wrong with selecting menus");
-			exit(EXIT_FAILURE);
-            break;
+		switch (selected_menu) {
+			case 0:											// Enter existing team
+				break;
+			case 1: 										// Create new team
+				display_create_new_team();
+				break;
+			case 2: 										// About
+															// TODO Make About page if have time
+				break;
+			case 3: 										// Quit
+				move(window_height - 1, 0);
+				addstr("Press any key to exit...");
+				refresh();
+				getchar();									// TODO Only for debug remove before publish
+				endwin();									// Turn off curses
+				return 0;
+		}
 	}
-    
-	getchar();				// TODO Only for debug remove before publish
-	endwin();				// turn off curses
-
-	return 0;
+	
 }
