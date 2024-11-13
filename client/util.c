@@ -3,6 +3,8 @@
 #include <ctype.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <curses.h>
+#include <string.h>
 
 #define NUMBER_OF_CHAR_AT_A_TIME 1
 
@@ -38,4 +40,15 @@ void set_non_blocking_mode() {
     terflags = fcntl(0, F_GETFL);
     terflags |= O_NONBLOCK;
     fcntl(0, F_SETFL, terflags);
+}
+
+void show_title(int start_line, const char* title) {
+	move(start_line, 0);
+	for(int i = 0; i < strlen(title) + 4; i++)
+        printw("=");
+    printw("\n");
+    printw("  %s\n", title);
+	for(int i = 0; i < strlen(title) + 4; i++)
+        printw("=");
+	printw("\n");
 }
