@@ -7,6 +7,7 @@
 #include <string.h>
 
 #define NUMBER_OF_CHAR_AT_A_TIME 1
+#define TITLE_START_LINE 3
 
 void tty_mode(int how) {
 	static struct termios orig_mode;
@@ -43,7 +44,7 @@ void set_non_blocking_mode() {
 }
 
 void show_title(const char* title) {
-	move(3, 0);
+	move(TITLE_START_LINE, 0);
 	for(int i = 0; i < strlen(title) + 4; i++)
         printw("=");
     printw("\n");
