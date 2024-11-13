@@ -50,5 +50,5 @@ void show_title(int start_line, const char* title) {
     printw("  %s\n", title);
 	for(int i = 0; i < strlen(title) + 4; i++)
         printw("=");
-	printw("\n");
+	printw("\n\n");
 }

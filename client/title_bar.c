@@ -14,6 +14,10 @@ void display_title_bar() {
 	// Show app version on the right
 	move(0, window_width - 6);
 	addstr(APP_VERSION);
+
+	// Add divider
+	for (int i = 0; i < window_width; i++)
+		addstr("-");
 	
 	refresh();
 }
