@@ -42,8 +42,8 @@ void set_non_blocking_mode() {
     fcntl(0, F_SETFL, terflags);
 }
 
-void show_title(int start_line, const char* title) {
-	move(start_line, 0);
+void show_title(const char* title) {
+	move(3, 0);
 	for(int i = 0; i < strlen(title) + 4; i++)
         printw("=");
     printw("\n");

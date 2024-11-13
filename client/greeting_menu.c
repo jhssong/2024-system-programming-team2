@@ -5,7 +5,6 @@
 #include "title_bar.h"
 #include "util.h"
 
-#define START_LINE 3
 #define MENU_COUNT 4
 
 const char* GREETING_MENU_TITLE = "Welcome to the TTT(Team Time Table) Application!";
@@ -54,7 +53,7 @@ void move_menu_cursor(int dir) {  // 0: up, 1: down
 int display_greeting_menus() {
 	clear();
 	display_title_bar();
-	show_title(START_LINE, GREETING_MENU_TITLE);
+	show_title(GREETING_MENU_TITLE);
 
 	int trash_x_value;
 	getyx(stdscr, current_line, trash_x_value);

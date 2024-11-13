@@ -5,29 +5,21 @@
 #include "title_bar.h"
 #include "util.h"
 
-#define QUESTION_START_LINE 3
-
-const char* CREATE_NEW_TEAM_TITLE = "Creat New Team";
-
+const char* CREATE_NEW_TEAM_TITLE = "Create New Team";
 const char* TEAM_NAME_QUESTION = "What is the team name? (max 256 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
 
 void display_create_new_team() {
 	clear();
 	display_title_bar();
-
-	show_title(QUESTION_START_LINE, CREATE_NEW_TEAM_TITLE);
-
-	// move(QUESTION_START_LINE, 0);
-	printw("\n");
+	show_title(CREATE_NEW_TEAM_TITLE);
 
 	addstr(TEAM_NAME_QUESTION);							// Ask team name
 	printw("\n: ");
 
 	cbreak();
     echo();
-	refresh();
-	
+	refresh();	
 	
 	char team_name[257];
 	getstr(team_name);
