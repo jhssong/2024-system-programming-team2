@@ -11,7 +11,7 @@ LDFLAGS = -lncurses
 TARGET = app
 
 # Source files
-SRC = main.c constant.c util.c title_bar.c greeting_menu.c
+SRC = main.c constant.c util.c title_bar.c greeting_menu.c create_new_team.c
 
 # Build
 all: $(TARGET)
