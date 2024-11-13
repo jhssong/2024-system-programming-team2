@@ -6,7 +6,6 @@
 #include "util.h"
 
 #define START_LINE 3
-
 #define MENU_COUNT 4
 
 const char* GREETING_MENU_TITLE = "Welcome to the TTT(Team Time Table) Application!";
