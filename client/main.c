@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
-#include "constant.h"
+#include "common.h"
 #include "util.h"
 #include "greeting_menu.h"
 #include "create_new_team.h"

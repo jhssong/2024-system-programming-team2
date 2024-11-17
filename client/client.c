@@ -38,21 +38,31 @@ void connect_to_server()
     }
     
 
-    while(1) {
-        printf("Enter message: ");
-        fgets(msg, BUFFER_SIZE, stdin);
-        msg[strcspn(msg, "\n")] = 0; // exchange '\n' to '\0'
+    int func = 0;
+    printf("Enter what function to do: ");
+    scanf("%d", &func);
+    send(sock, &func, sizeof(func), 0);
 
-        send(sock, msg, strlen(msg), 0);
+    int function_received;
+    recv(sock, &function_received, sizeof(int), 0);
 
-        int bytes_received = recv(sock, msg, BUFFER_SIZE, 0);
-        if(bytes_received <= 0){
-            printf("Server disconnected\n");
-            break;
-        }
+    switch(function_received)
+    {
+        case 0: // Will Receive Team_list via server_response union
 
-        msg[bytes_received] = '\0';
-        printf("Server response: %s\n", msg);
+        break;
+
+        case 1: // will receive Team_detail via server_response union
+
+        break;
+
+        case 2: // will receive Personal_table via server_response union
+
+        break;
+
+        case 3: // will receive Team_table via server_response union
+        
+        break;
     }
     
     close(sock); // close socket

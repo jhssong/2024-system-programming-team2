@@ -1,16 +1,13 @@
-#ifndef SERVER_H
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <pthread.h>
+#ifndef COMMON_H
+#include <sys/ioctl.h>
 
-#define SERVER_H
+#define COMMON_H
 
-#define APP_NAME "TTT_SERVER"
+#define APP_NAME "TTT"
 #define APP_VERSION "v0.0.1"
+
+extern int window_width;
+extern int window_height;
 
 typedef struct {
 	char team_list[8][256];
@@ -37,8 +34,8 @@ typedef union {
 	Team_detail team_detail;
 	Personal_Table personal_table;
 	Team_table team_table;
-}server_response;
+}get_server_response;
 
- server_response connect_to_server();
+void get_window_size();
 
 #endif
