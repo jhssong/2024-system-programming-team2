@@ -12,3 +12,10 @@ void get_window_size() {
 	}
 }
 
+int check_window_size() {
+	get_window_size();
+	
+	if (window_width < TERMINAL_MIN_WIDTH) return -1;
+	if (window_height < TERMINAL_MIN_HEIGHT) return -1;
+	return 0;
+}
