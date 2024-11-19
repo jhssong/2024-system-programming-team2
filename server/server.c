@@ -6,6 +6,14 @@
 
 int clnt_count = 0;
 
+get_server_response function_0 (){
+	get_server_response team_directory;
+
+	// get team_directory func
+
+	return team_directory;
+}
+
 void *handle_client(void *thread_sock)
 {
 	int sock = *(int *)thread_sock;
@@ -16,24 +24,28 @@ void *handle_client(void *thread_sock)
 	int bytes_read;
 
 
-	if(bytes_read = recv(sock, function_choose, sizeof(int), 0) < 0){
-		printf("Cannot receive what func do");
-		return ; // Disconnect 
+	if((bytes_read = recv(sock, &function_choose, sizeof(int), 0)) < 0){
+		perror("Cannot receive what func do");
+		exit(EXIT_FAILURE) ; // Disconnect 
 	}
 
 	send(sock, &function_choose, sizeof(int), 0); // send client what client send
 
+	get_server_response response;
+	memset(&response, 0, sizeof(get_server_response));
+	
 	// below function that server send to client must be return type sever_response union!
 	switch(function_choose){
 		case 0: // server send Team_List to client
-
+			response = function_0();
+			send(sock, &response, sizeof(get_server_response), 0);
 		break;
 
 		case 1: // server send Team_Detail to client
 
 		break;
 
-		case 2: // serfver send Personal_Time_Table to client
+		case 2: // server send Personal_Time_Table to client
 
 		break;
 
