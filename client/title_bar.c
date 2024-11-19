@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <curses.h>
-#include "common.h"
+#include "util.h"
+#include "../common/constant.h"
 
 void display_title_bar() {
 	// Show current date on the left

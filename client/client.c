@@ -3,14 +3,14 @@
 #define PORT 8080
 #define BUFFER_SIZE 100
 
-get_server_response function_0(int sock) {
+Server_response function_0(int sock) {
     // get team_directory via server response
-    get_server_response response;
-    memset(&response, 0, sizeof(get_server_response));
+    Server_response response;
+    memset(&response, 0, sizeof(Server_response));
 
     int bytes_received = 0;
 
-    bytes_received = recv(sock, &response, sizeof(get_server_response), 0);
+    bytes_received = recv(sock, &response, sizeof(Server_response), 0);
     if(bytes_received<0){
         perror("Fail to receive team_directory\n");
     }
@@ -59,7 +59,7 @@ void connect_to_server()
     send(sock, &func, sizeof(func), 0);
 
     int function_received;
-    get_server_response response;
+    Server_response response;
 
     recv(sock, &function_received, sizeof(int), 0);
 
@@ -84,5 +84,4 @@ void connect_to_server()
     }
     
     close(sock); // close socket
-    return 0;
 }

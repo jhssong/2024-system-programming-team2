@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
-#include "common.h"
 #include "util.h"
+#include "client.h"
 #include "greeting_menu.h"
 #include "create_new_team.h"
-#include "select_existing_team.h"
+// #include "select_existing_team.h"
 
 int main() {
 	get_window_size();  									// Get window size and save it in constant.c
@@ -19,7 +19,7 @@ int main() {
 
 		switch (selected_menu) {
 			case 0:											// Enter existing team
-				display_select_existing_team();
+				// display_select_existing_team();
 				break;
 			case 1: 										// Create new team
 				display_create_new_team();

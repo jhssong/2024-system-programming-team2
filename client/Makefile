@@ -4,14 +4,14 @@
 CC = gcc
 
 # Set compile optiosn
-CFLAGS = -Wall
+CFLAGS = -Wall -I../common
 LDFLAGS = -lncurses
 
 #Set execution file name
 TARGET = app
 
 # Source files
-SRC = main.c constant.c util.c title_bar.c greeting_menu.c create_new_team.c
+SRC = main.c util.c title_bar.c greeting_menu.c create_new_team.c client.c
 
 # Build
 all: $(TARGET)
