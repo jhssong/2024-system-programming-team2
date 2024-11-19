@@ -6,7 +6,7 @@
 #include "util.h"
 
 const char* CREATE_NEW_TEAM_TITLE = "Create New Team";
-const char* TEAM_NAME_QUESTION = "What is the team name? (max 256 characters)";
+const char* TEAM_NAME_QUESTION = "What is the team name? (max 255 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
 
 void display_create_new_team() {
