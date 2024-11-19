@@ -6,6 +6,7 @@
 #include <curses.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include "../common/constant.h"
 
 #define TITLE_START_LINE 3
 
@@ -19,6 +20,14 @@ void get_window_size() {
 		window_width = wbuf.ws_col;
 		window_height = wbuf.ws_row;
 	}
+}
+
+int check_window_size() {
+	get_window_size();
+	
+	if (window_width < TERMINAL_MIN_WIDTH) return -1;
+	if (window_height < TERMINAL_MIN_HEIGHT) return -1;
+	return 0;
 }
 
 void show_title(const char* title) {
