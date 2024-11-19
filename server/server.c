@@ -6,21 +6,52 @@
 
 int clnt_count = 0;
 
+Server_response function_0 (){
+	Server_response team_directory;
+
+	// get team_directory func
+
+	return team_directory;
+}
+
 void *handle_client(void *thread_sock)
 {
 	int sock = *(int *)thread_sock;
 	free(thread_sock);
 
-	char buffer[BUFFER_SIZE];
+	// char buffer[BUFFER_SIZE]; // receive info that client send(it is not used while function has completed)
+	int function_choose; // receive what func do
 	int bytes_read;
 
-	while((bytes_read = recv(sock, buffer, BUFFER_SIZE, 0)) > 0) {
-		buffer[bytes_read] = '\0';
-		printf("Recevied from client: %s\n", buffer);
 
-		char *response = buffer;
-		strcat(buffer, " is successfully send to server");
-		send(sock, response, strlen(response), 0);
+	if((bytes_read = recv(sock, &function_choose, sizeof(int), 0)) < 0){
+		perror("Cannot receive what func do");
+		exit(EXIT_FAILURE) ; // Disconnect 
+	}
+
+	send(sock, &function_choose, sizeof(int), 0); // send client what client send
+
+	Server_response response;
+	memset(&response, 0, sizeof(Server_response));
+	
+	// below function that server send to client must be return type sever_response union!
+	switch(function_choose){
+		case 0: // server send Team_List to client
+			response = function_0();
+			send(sock, &response, sizeof(Server_response), 0);
+		break;
+
+		case 1: // server send Team_Detail to client
+
+		break;
+
+		case 2: // server send Personal_Time_Table to client
+
+		break;
+
+		case 3: // server send Team_Time_Table to client
+		
+		break;
 	}
 	printf("Client disconnected.\n");
 	close(sock);
@@ -61,12 +92,12 @@ int main()
 	while(1){
 		
 		if (clnt_count == 9) {
-    perror("Server max client is 8!");
-    	// send "Server full" message and disconnect
-    	const char *bad = "Server full";
-  	  send(clnt_sock, bad, strlen(bad), 0);
-	    close(clnt_sock);
-    	continue;
+    		perror("Server max client is 8!");
+    		// send "Server full" message and disconnect
+    		const char *bad = "Server full";
+  	  		send(clnt_sock, bad, strlen(bad), 0);
+	    	close(clnt_sock);
+    		continue;
 		}else{
 			const char *good = "Server is not full";
 			send(clnt_sock, good, strlen(good), 0);

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
-#include "constant.h"
 #include "title_bar.h"
 #include "util.h"
 

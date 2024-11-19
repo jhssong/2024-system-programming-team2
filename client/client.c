@@ -3,6 +3,21 @@
 #define PORT 8080
 #define BUFFER_SIZE 100
 
+Server_response function_0(int sock) {
+    // get team_directory via server response
+    Server_response response;
+    memset(&response, 0, sizeof(Server_response));
+
+    int bytes_received = 0;
+
+    bytes_received = recv(sock, &response, sizeof(Server_response), 0);
+    if(bytes_received<0){
+        perror("Fail to receive team_directory\n");
+    }
+
+    return response;
+}
+
 // connect to 127.0.0.1:8080
 void connect_to_server()
 {
@@ -38,23 +53,35 @@ void connect_to_server()
     }
     
 
-    while(1) {
-        printf("Enter message: ");
-        fgets(msg, BUFFER_SIZE, stdin);
-        msg[strcspn(msg, "\n")] = 0; // exchange '\n' to '\0'
+    int func = 0;
+    printf("Enter what function to do: ");
+    scanf("%d", &func);
+    send(sock, &func, sizeof(func), 0);
 
-        send(sock, msg, strlen(msg), 0);
+    int function_received;
+    Server_response response;
 
-        int bytes_received = recv(sock, msg, BUFFER_SIZE, 0);
-        if(bytes_received <= 0){
-            printf("Server disconnected\n");
-            break;
-        }
+    recv(sock, &function_received, sizeof(int), 0);
 
-        msg[bytes_received] = '\0';
-        printf("Server response: %s\n", msg);
+    switch(function_received)
+    {
+        case 0: // Will Receive Team_list via server_response union
+            response = function_0(sock);
+            // will place show team_list function
+        break;
+
+        case 1: // will receive Team_detail via server_response union
+
+        break;
+
+        case 2: // will receive Personal_table via server_response union
+
+        break;
+
+        case 3: // will receive Team_table via server_response union
+        
+        break;
     }
     
     close(sock); // close socket
-    return 0;
 }

@@ -4,10 +4,10 @@
 CC = gcc
 
 # Set compile optiosn
-CFLAGS = -Wall
+CFLAGS = -Wall -I../common
 
 #Set execution file name
-TARGET = serfver
+TARGET = server
 
 # Source files
 SRC = server.c

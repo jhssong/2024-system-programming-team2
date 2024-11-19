@@ -6,12 +6,10 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include "../common/type.h"
+#include "../common/constant.h"
 
 #define SERVER_H
 
-#define APP_NAME "TTT_SERVER"
-#define APP_VERSION "v0.0.1"
-
-void connect_to_server();
 
 #endif

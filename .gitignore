@@ -2,3 +2,6 @@
 *.o
 app
 .vs
+
+client/app
+server/server
