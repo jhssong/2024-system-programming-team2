@@ -12,6 +12,17 @@ int main() {
 	initscr();  											// Turns on curses
 	curs_set(0);
 
+	int valid_window_size = check_window_size();			//  Check valid terminal size
+	while (valid_window_size == -1) {
+		clear();
+		move(0, 0);
+		printw("Minimum terminal size is %d x %d, current: %d x %d", 
+			TERMINAL_MIN_WIDTH, TERMINAL_MIN_HEIGHT, window_width, window_height);
+		refresh();
+		sleep(1);
+		valid_window_size =  check_window_size();
+	}
+	
 	int selected_menu = -1;
 
 	while (selected_menu != 3) {
