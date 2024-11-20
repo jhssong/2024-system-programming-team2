@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <curses.h>
-#include "title_bar.h"
-#include "util.h"
+#include "create_new_team.h"
 
 const char* CREATE_NEW_TEAM_TITLE = "Create New Team";
 const char* TEAM_NAME_QUESTION = "What is the team name? (max 255 characters)";
