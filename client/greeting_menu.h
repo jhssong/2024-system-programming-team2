@@ -2,6 +2,7 @@
 #define GREETING_MENU_H
 
 #include "util.h"
+#include "menu_selector.h"
 
 #define MENU_SIZE 4
 

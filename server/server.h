@@ -7,7 +7,6 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include "../common/type.h"
-#include "../common/constant.h"
 
 #define SERVER_H
 

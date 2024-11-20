@@ -12,6 +12,5 @@ void get_window_size();
 int check_window_size();
 void display_title_bar();
 void show_title(const char* title);
-int select_menu_item(const char* item_list[], int list_size);
 
 #endif

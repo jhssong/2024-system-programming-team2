@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "util.h"
+#include "menu_selector.h"
 
 int display_select_existing_team();
 
