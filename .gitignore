@@ -1,7 +1,9 @@
 # compiled files
 *.o
-app
 .vs
 
 client/app
 server/server
+
+client/team/
+server/team/
