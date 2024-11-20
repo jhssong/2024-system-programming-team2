@@ -1,14 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <termios.h>
-#include <fcntl.h>
-#include <curses.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include "../common/constant.h"
-
-#define TITLE_START_LINE 3
+#include "util.h"
 
 int window_width = 0;
 int window_height = 0;
@@ -28,6 +18,26 @@ int check_window_size() {
 	if (window_width < TERMINAL_MIN_WIDTH) return -1;
 	if (window_height < TERMINAL_MIN_HEIGHT) return -1;
 	return 0;
+}
+
+void display_title_bar() {
+	// Show current date on the left
+	move(0, 0);
+	addstr("2024-12-12");
+
+	// Show app name on the middle
+	move(0, window_width / 2 - 2);
+	addstr(APP_NAME);
+
+	// Show app version on the right
+	move(0, window_width - 6);
+	addstr(APP_VERSION);
+
+	// Add divider
+	for (int i = 0; i < window_width; i++)
+		addstr("-");
+	
+	refresh();
 }
 
 void show_title(const char* title) {
@@ -60,7 +70,7 @@ void clear_cursor() {
 	refresh();
 }
 
-void move_cursor(int dir) {  								// dir: 0(up), 1(down)
+void move_menu_cursor(int dir) {  								// dir: 0(up), 1(down)
 	clear_cursor();
 
 	if (dir == 0) {
@@ -80,7 +90,7 @@ void move_cursor(int dir) {  								// dir: 0(up), 1(down)
 	refresh();
 }
 
-int select_item(const char* item_list[], int list_size) {
+int select_menu_item(const char* item_list[], int list_size) {
 	int trash_x_value;
 	getyx(stdscr, current_line, trash_x_value);				// Get current line value
 	(void)(trash_x_value);
@@ -102,10 +112,10 @@ int select_item(const char* item_list[], int list_size) {
 	while((selection_command = get_valid_input())) {
 		switch(selection_command) {
 			case 65:										// key up: move up
-				move_cursor(0);
+				move_menu_cursor(0);
 				break;
 			case 66:										// key down: move down
-				move_cursor(1);
+				move_menu_cursor(1);
 				break;
 			case 13:										// enter: select menu
 				return current_line - item_start_line;
