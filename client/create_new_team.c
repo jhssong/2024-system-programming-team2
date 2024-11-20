@@ -1,7 +1,7 @@
 #include "create_new_team.h"
 
 const char* CREATE_NEW_TEAM_TITLE = "Create New Team";
-const char* TEAM_NAME_QUESTION = "What is the team name? (max 255 characters)";
+const char* TEAM_NAME_QUESTION = "What is the team name? (max 50 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
 
 void display_create_new_team() {
@@ -16,7 +16,7 @@ void display_create_new_team() {
     echo();
 	refresh();	
 	
-	char team_name[257];
+	char team_name[51];
 	getstr(team_name);
 
 	// TODO Add valid check (Duplictate check)
@@ -44,5 +44,14 @@ void display_create_new_team() {
 	echo();
     refresh();
 
-	// TODO Send data to server	
+	Team_detail new_team;
+	strncpy(new_team.team_name, team_name, sizeof(team_name));
+	strncpy(new_team.team_pw, team_pw, sizeof(team_pw));
+
+	// Server_response union에 new_team을 할당
+	Server_response req_data;
+	memset(&req_data, 0, sizeof(Server_response)); // 초기화
+	req_data.team_detail = new_team; // team_detail 멤버에 new_team 할당
+
+	connect_to_server(1, req_data);  // req_data는 Server_response 타입
 }
