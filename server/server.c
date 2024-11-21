@@ -65,12 +65,44 @@ void *handle_client(void *thread_sock) {
 			free(result);
             break;
 
-		case 2: // server send Personal_Time_Table to client
+		case 2: // server send Personal_Time_Table and Team_Time_Table to client
+			Personal_Table personal_table;
+			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
+				perror("Failed to receive personal table data");
+                close(sock);
+                client_count--;
+                return NULL;
+			}else {
+				#ifdef DEBUG
+					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Personal_Table));
+				#endif
+			}
+
+			send_personal_table(&personal_table);	// at manage_personal_table.c
+			if(send(sock, &personal_table, sizeof(Personal_Table), 0) <= 0){
+				perror("Failed to send personal table data");
+			}
+
+			break;
 
 		break;
 
-		case 3: // server send Team_Time_Table to client
-		
+		case 3: // server receive Personal_Time_Table and send Team_Time_Table to client
+			Personal_Table personal_table;
+			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
+				perror("Failed to receive personal table data");
+                close(sock);
+                client_count--;
+                return NULL;
+			}else {
+				#ifdef DEBUG
+					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Personal_Table));
+				#endif
+			}
+
+			update_personal_table(&personal_table);	// at manage_personal_table.c
+
+			//TODO: make Team_Time_Table and send to client
 		break;
 	}
 
