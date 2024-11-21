@@ -10,7 +10,7 @@ CFLAGS = -Wall -I../common
 TARGET = server
 
 # Source files
-SRC = server.c get_team_detail.c create_team.c
+SRC = server.c get_team_detail.c create_team.c team_list.c
 
 # Build
 all: $(TARGET)

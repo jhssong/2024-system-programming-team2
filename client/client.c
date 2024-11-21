@@ -1,20 +1,5 @@
 #include "client.h"
 
-Server_response function_0(int sock) {
-    // get team_directory via server response
-    Server_response response;
-    memset(&response, 0, sizeof(Server_response));
-
-    int bytes_received = 0;
-
-    bytes_received = recv(sock, &response, sizeof(Server_response), 0);
-    if(bytes_received<0){
-        perror("Fail to receive team_directory\n");
-    }
-
-    return response;
-}
-
 void connect_to_server(int function_choose, Server_response req_data) {
     int sock;
     struct sockaddr_in serv_addr;
@@ -63,8 +48,23 @@ void connect_to_server(int function_choose, Server_response req_data) {
     switch(function_received)
     {
         case 0: // Will Receive Team_list via server_response union
-            response = function_0(sock);
-            // will place show team_list function
+        memset(&response, 0, sizeof(Server_response));
+
+        Team_list team_list;
+        if ((received_bytes = recv(sock, &team_list, sizeof(team_list), 0)) <= 0) {
+            perror("Failed to receive team list");
+            close(sock);
+            exit(EXIT_FAILURE);
+        }
+        int check = 0;
+        printf("%d\n", team_list.size);
+        printf("%s %s\n", team_list.team_list[0], team_list.team_list[1]);
+        while(check!=team_list.size){
+            printf("While문 안임");
+            printf("%d: %s\n", check, team_list.team_list[check]);
+            check ++;
+        }
+            
         break;
 
         case 1: // will receive Team_detail via server_response union

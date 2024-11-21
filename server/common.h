@@ -27,6 +27,7 @@
 
 typedef struct {
 	char team_list[MAX_TEAM_COUNT][MAX_TEAM_NAME_LEN];
+	int size;
 } Team_list;
 
 typedef struct {
