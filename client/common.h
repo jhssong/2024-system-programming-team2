@@ -40,6 +40,9 @@
 #define MAX_USER_NAME_LEN 51
 #define CREATED_TIME_LEN 20
 
+#define TABLE_MAX_TIME 26
+#define TABLE_MAX_DAY 7
+
 typedef struct {
 	char team_list[MAX_TEAM_COUNT][MAX_TEAM_NAME_LEN];
 } Team_list;
@@ -52,11 +55,13 @@ typedef struct {
 } Team_detail;
 
 typedef struct {
+	char team_name[MAX_TEAM_NAME_LEN];
 	char username[MAX_USER_NAME_LEN];
 	short schedule[26][7];
 } Personal_Table;
 
 typedef struct{
+	char team_name[MAX_TEAM_NAME_LEN];
 	short team_table[26][7];
 } Team_table;
 
