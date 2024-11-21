@@ -27,9 +27,6 @@
 #define MENU_START_ROW 4
 #define MENU_START_COL 36
 
-#define TEAM_BASE_DIR "team"
-#define TEAM_CONFIG_FILE_NAME "config.txt"
-
 #define TEAM_FOLDER_MODE 0777
 #define TEAM_CONFIG_FILE_MODE 0644
 
