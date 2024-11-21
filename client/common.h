@@ -34,17 +34,18 @@
 #define MAX_TEAM_CONFIG_FILE_PATH 120
 
 #define MAX_TEAM_COUNT 8
+#define MAX_TEAM_ID_LEN 9
 #define MAX_TEAM_NAME_LEN 51
 #define MAX_TEAM_PW_LEN 9
-#define CREATED_TIME_LEN 11
 #define MAX_USER_NAME_LEN 51
+#define CREATED_TIME_LEN 20
 
 typedef struct {
 	char team_list[MAX_TEAM_COUNT][MAX_TEAM_NAME_LEN];
 } Team_list;
 
 typedef struct {
-	int team_id;
+	char team_id[MAX_TEAM_ID_LEN];
 	char team_pw[MAX_TEAM_PW_LEN];
 	char team_name[MAX_TEAM_NAME_LEN];
 	char created_time[CREATED_TIME_LEN];

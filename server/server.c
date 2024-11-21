@@ -42,19 +42,23 @@ void *handle_client(void *thread_sock) {
 			send(sock, &response, sizeof(Server_response), 0);
 		break;
 
-		case 1:		// create new team
+		case 1:																				// Create new team
 			Team_detail new_team;
-            if ((received_bytes = recv(sock, &new_team, sizeof(Team_detail), 0)) <= 0) {
+            if ((received_bytes = recv(sock, &new_team, sizeof(Team_detail), 0)) <= 0) {	// Recieve new team detail
                 perror("Failed to receive team data");
                 close(sock);
                 client_count--;
                 return NULL;
-            }
+            } else {
+				#ifdef DEBUG
+					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Team_detail));
+				#endif
+			}
 
-            Team_detail *result = create_team(&new_team);
+            Team_detail *result = create_new_team(&new_team);								// Create new team
             if (result == NULL) {
                 perror("Failed to create team");
-            } else if (send(sock, result, sizeof(Team_detail), 0) <= 0) {
+            } else if (send(sock, result, sizeof(Team_detail), 0) <= 0) {					// Send back team_detail if success
                 perror("Failed to send team creation response");
             }
 

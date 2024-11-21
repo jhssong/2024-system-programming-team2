@@ -67,20 +67,16 @@ void connect_to_server(int function_choose, Server_response req_data) {
             // will place show team_list function
         break;
 
-        case 1: // will receive Team_detail via server_response union
+        case 1: // will receive Team_detail via server_response union            
             send(sock, &req_data.team_detail, sizeof(Team_detail), 0);
 	        memset(&response, 0, sizeof(Server_response));
 
             Team_detail new_team;
             if ((received_bytes = recv(sock, &new_team, sizeof(Team_detail), 0)) <= 0) {
                 perror("Failed to receive team data");
-                close(sock);
-                exit(EXIT_FAILURE);
+                getchar();
+                break;
             }
-            printw("\nCreated!");
-            refresh();
-
-            getchar();
             break;
 
         case 2: // will receive Personal_table via server_response union
