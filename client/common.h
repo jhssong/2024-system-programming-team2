@@ -57,12 +57,12 @@ typedef struct {
 typedef struct {
 	char team_name[MAX_TEAM_NAME_LEN];
 	char username[MAX_USER_NAME_LEN];
-	short schedule[26][7];
+	short schedule[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Personal_Table;
 
 typedef struct{
 	char team_name[MAX_TEAM_NAME_LEN];
-	short team_table[26][7];
+	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Team_table;
 
 typedef union {
