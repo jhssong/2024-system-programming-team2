@@ -8,6 +8,8 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include "create_team.h"
 #include "get_team_detail.h"
