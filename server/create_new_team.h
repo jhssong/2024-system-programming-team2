@@ -3,8 +3,7 @@
 
 #include "common.h"
 #include "util.h"
-#include "client.h"
 
-void display_create_new_team();
+Team_detail* create_new_team(Team_detail *new_team);
 
 #endif
