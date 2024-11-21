@@ -4,6 +4,7 @@
 #include "greeting_menu.h"
 #include "create_new_team.h"
 #include "select_existing_team.h"
+#include "personal_time_table.h"
 
 int main() {
 	get_window_size();  									// Get window size and save it in constant.c
