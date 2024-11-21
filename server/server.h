@@ -11,6 +11,7 @@
 
 #include "create_new_team.h"
 #include "get_team_detail.h"
+#include "manage_personal_table.h"
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
