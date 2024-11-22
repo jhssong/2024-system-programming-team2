@@ -2,14 +2,6 @@
 
 int client_count = 0;
 
-Server_response function_0 () {
-	Server_response team_directory;
-
-	// get team_directory func
-
-	return team_directory;
-}
-
 void *handle_client(void *thread_sock) {
 	int sock = *(int *)thread_sock;
 	free(thread_sock);
@@ -38,8 +30,11 @@ void *handle_client(void *thread_sock) {
 	// below function that server send to client must be return type sever_response union!
 	switch(function_choose){
 		case 0: 	// server send Team_List to client
-			response = function_0();
-			send(sock, &response, sizeof(Server_response), 0);
+			Team_list team_list;
+			team_list = get_team_list();
+			if (send(sock, &team_list, sizeof(Team_list), 0)<= 0){
+				perror("Failed to send team list response");
+			}
 		break;
 
 		case 1:																				// Create new team
