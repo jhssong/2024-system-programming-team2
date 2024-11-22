@@ -64,9 +64,27 @@ typedef union {
 	update_user_table update_user_table;
 } request;
 
+typedef struct {
+	int cmd;
+	request request;
+} request_packet;
+
 extern user_info user_info;
 extern team_info team_info;
 extern team_list team_list;
+extern short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+
+typedef union {
+	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+} response;
+
+typedef struct {
+	int status_code;
+	char msg[51];
+	response response;
+} response_packet;
+
 
 // deprecated ---------------------------------------------- 
 
