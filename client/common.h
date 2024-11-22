@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#include "util.h"
 
 #define APP_NAME "TTT"
 #define APP_VERSION "v0.0.1"
@@ -34,22 +35,25 @@
 #define MAX_TEAM_COUNT 8
 #define MAX_TEAM_ID_LEN 9  // TODO remove
 
+#define TABLE_MAX_TIME 26
+#define TABLE_MAX_DAY 7
+
 typedef struct {
 	char team_name[MAX_NAME_SIZE];
 	char user_name[MAX_NAME_SIZE];
 	char user_pw[MAX_PW_SIZE];
-} user_info;
+} userinfo;
 
 typedef struct {
 	char team_name[MAX_NAME_SIZE];
 	char team_pw[MAX_PW_SIZE];
 	char created_time[CREATED_TIME_LEN];
-} team_info;
+} teaminfo;
 
 typedef struct {
 	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
 	int size;
-} team_list;
+} teamlist;
 
 typedef struct {
 	char user_name[MAX_NAME_SIZE];
@@ -58,31 +62,30 @@ typedef struct {
 } update_user_table;
 
 typedef union {
-	user_info user_info;
-	team_list team_list;
-	team_info team_info;
-	update_user_table update_user_table;
+	userinfo user_info;
+	teaminfo team_info;
+	update_user_table user_table;
 } request;
 
 typedef struct {
 	int cmd;
-	request request;
+	request req;
 } request_packet;
 
-extern user_info user_info;
-extern team_info team_info;
-extern team_list team_list;
+extern userinfo user_info;
+extern teaminfo team_info;
+extern teamlist team_list;
 extern short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 
 typedef union {
 	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
-	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } response;
 
 typedef struct {
 	int status_code;
 	char msg[51];
-	response response;
+	response res;
 } response_packet;
 
 

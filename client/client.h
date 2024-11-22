@@ -13,6 +13,7 @@
 #define PORT 8080
 #define BUFFER_SIZE 100
 
-void connect_to_server(int function_choose, Server_response req_data);
+response connect_to_server(request_packet req);
+void old_connect_to_server(int function_choose, Server_response req_data);
 
 #endif

@@ -61,5 +61,5 @@ void display_create_new_team() {
 	refresh();
 #endif
 
-	connect_to_server(1, req_data);
+	old_connect_to_server(1, req_data);
 }

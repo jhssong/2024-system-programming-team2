@@ -1,6 +1,49 @@
 #include "client.h"
 
-void connect_to_server(int function_choose, Server_response req_data) {
+response connect_to_server(request_packet req) {
+    int sock;
+    int received_bytes;
+    struct sockaddr_in serv_addr;
+
+    sock = socket(PF_INET, SOCK_STREAM, 0);
+    if(sock == -1){
+        perror("socket() error");
+        exit(EXIT_FAILURE);
+    }
+
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = inet_addr(SERVER_ADDRESS);
+    serv_addr.sin_port = htons(PORT);
+
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) {
+        perror("Connection failed");
+        close(sock);
+        exit(EXIT_FAILURE);
+    }
+
+    send(sock, &req, sizeof(request_packet), 0);
+
+    response_packet res;
+    received_bytes = recv(sock, &res, sizeof(response_packet), 0);
+
+    if (received_bytes <= 0) {
+        perror("Failed to receive data");
+        close(sock);
+        exit(EXIT_FAILURE);
+    }
+
+    if (res.status_code == 503) {
+        mvprintw(0, window_height - 1, "%s", res.msg);
+        refresh();
+        close(sock);
+        exit(EXIT_FAILURE);
+    }
+    
+    return res.res;
+}
+
+void old_connect_to_server(int function_choose, Server_response req_data) {
     int sock;
     struct sockaddr_in serv_addr;
 
