@@ -4,6 +4,6 @@
 #include "common.h"
 #include "util.h"
 
-Team_detail* create_new_team(Team_detail *new_team);
+char* create_new_team(teaminfo *new_team);
 
 #endif

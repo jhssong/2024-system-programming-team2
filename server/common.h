@@ -23,25 +23,25 @@
 
 #define MAX_TEAM_COUNT 8
 #define MAX_TEAM_ID_LEN 9
-#define MAX_TEAM_NAME_LEN 51
-#define MAX_TEAM_PW_LEN 9
-#define MAX_USER_NAME_LEN 51
+#define MAX_NAME_SIZE 51
+#define MAX_PW_SIZE 9
+#define MAX_NAME_SIZE 51
 #define CREATED_TIME_LEN 20
 
 typedef struct {
-	char team_list[MAX_TEAM_COUNT][MAX_TEAM_NAME_LEN];
+	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
 	int size;
 } Team_list;
 
 typedef struct {
 	char team_id[MAX_TEAM_ID_LEN];
-	char team_pw[MAX_TEAM_PW_LEN];
-	char team_name[MAX_TEAM_NAME_LEN];
+	char team_pw[MAX_PW_SIZE];
+	char team_name[MAX_NAME_SIZE];
 	char created_time[CREATED_TIME_LEN];
 } Team_detail;
 
 typedef struct {
-	char username[MAX_USER_NAME_LEN];
+	char username[MAX_NAME_SIZE];
 	short schedule[26][7];
 } Personal_Table;
 
@@ -55,5 +55,57 @@ typedef union {
 	Personal_Table personal_table;
 	Team_table team_table;
 } Server_response;
+
+
+
+// ----
+
+#define TABLE_MAX_TIME 26
+#define TABLE_MAX_DAY 7
+
+typedef struct {
+	char team_name[MAX_NAME_SIZE];
+	char user_name[MAX_NAME_SIZE];
+	char user_pw[MAX_PW_SIZE];
+} userinfo;
+
+typedef struct {
+	char team_name[MAX_NAME_SIZE];
+	char team_pw[MAX_PW_SIZE];
+	char created_time[CREATED_TIME_LEN];
+} teaminfo;
+
+typedef struct {
+	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
+	int size;
+} teamlist;
+
+typedef struct {
+	char user_name[MAX_NAME_SIZE];
+	char team_name[MAX_NAME_SIZE];
+	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+} update_user_table;
+
+typedef union {
+	userinfo user_info;
+	teaminfo team_info;
+	update_user_table user_table;
+} request;
+
+typedef struct {
+	int cmd;
+	request req;
+} request_packet;
+
+typedef union {
+	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+} response;
+
+typedef struct {
+	int status_code;
+	char msg[51];
+	response res;
+} response_packet;
 
 #endif
