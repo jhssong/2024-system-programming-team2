@@ -1,16 +1,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <stdlib.h>
 #include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <pthread.h>
-#include <dirent.h>
-#include <sys/stat.h>
 
+#include "common.h"
 #include "create_team.h"
 #include "get_team_detail.h"
 #include "team_list.h"

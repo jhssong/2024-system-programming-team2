@@ -9,6 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <dirent.h>
 
 #define TEAM_BASE_DIR "team"
 #define TEAM_CONFIG_FILE_NAME "config.txt"
