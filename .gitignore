@@ -2,8 +2,12 @@
 *.o
 .vs
 
+.vscode
+
 client/app
+client/app_debug
 server/server
+server/server_debug
 
 client/team/
 server/team/
