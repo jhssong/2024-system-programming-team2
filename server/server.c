@@ -49,7 +49,15 @@ void *handle_client(void *thread_sock)
 
 		break;
 
-		case 3: // server send Team_Time_Table to client
+		case 3:
+                load_personal_table(personal_table, &member_count);
+                count_available_time(personal_table, member_count);
+
+                if (send(sock, team_table, sizeof(team_table), 0) <= 0) {
+                    perror("Failed to send team table");
+                } else {
+                    printf("Team table sent successfully.\n");
+                }
 		
 		break;
 	}
