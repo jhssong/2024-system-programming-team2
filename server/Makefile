@@ -14,7 +14,7 @@ TARGET = server
 DEBUG_TARGET = server_debug
 
 # Source files
-SRC = server.c util.c get_team_detail.c create_new_team.c team_list.c
+SRC = server.c util.c get_team_detail.c create_new_team.c team_list.c user_login.c
 
 # Build
 all: $(TARGET)

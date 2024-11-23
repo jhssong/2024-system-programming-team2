@@ -14,9 +14,9 @@ void display_create_new_team() {
 
 	cbreak();
     echo();
-	refresh();	
+	refresh();
 	
-	char team_name[51];
+	char team_name[MAX_NAME_SIZE];
 	getstr(team_name);
 
 													// TODO Add valid check (Duplictate check)
@@ -66,9 +66,6 @@ void display_create_new_team() {
 	refresh();
 #endif
 
-	connect_to_server(req);
-
-#ifdef DEBUG
-	getchar();
-#endif
+	response res = connect_to_server(req);
+	team_info = new_team;
 }
