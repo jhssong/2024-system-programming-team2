@@ -4,8 +4,10 @@
 #include "greeting_menu.h"
 #include "create_new_team.h"
 #include "select_existing_team.h"
+#include "login.h"
 
 int main() {
+	init_global_variable();
 	get_window_size();  									// Get window size and save it in constant.c
 	initscr();  											// Turns on curses
 	curs_set(0);
@@ -32,6 +34,7 @@ int main() {
 				break;
 			case 1: 										// Create new team
 				display_create_new_team();
+				login();
 				break;
 			case 2: 										// About
 															// TODO Make About page if have time

@@ -13,7 +13,9 @@
 #include <signal.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+
 #include "util.h"
+#include "client.h"
 
 #define APP_NAME "TTT"
 #define APP_VERSION "v0.0.1"
@@ -87,6 +89,8 @@ typedef struct {
 	char msg[51];
 	response res;
 } response_packet;
+
+void init_global_variable();
 
 
 // deprecated ---------------------------------------------- 

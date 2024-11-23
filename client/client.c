@@ -41,7 +41,7 @@ response connect_to_server(request_packet req) {
         exit(EXIT_FAILURE);
     } else {
     #ifdef DEBUG
-        mvprintw(window_height - 10, 0, "[DEBUG] status %d with: %s\n", res.status_code, res.msg);
+        printw("[DEBUG] status %d with: %s\n", res.status_code, res.msg);
         refresh();
     #endif
     }
@@ -54,6 +54,7 @@ response connect_to_server(request_packet req) {
         mvprintw(window_height - 1, 0, "Failed to receive data\n");
         refresh();
         close(sock);
+        exit(EXIT_FAILURE);
     }
 
     if (res.status_code == 503) {
@@ -62,7 +63,7 @@ response connect_to_server(request_packet req) {
         close(sock);
     } else {
     #ifdef DEBUG
-        mvprintw(window_height - 10, 0, "[DEBUG] status %d with: %s\n", res.status_code, res.msg);
+        printw("[DEBUG] status %d with: %s\n", res.status_code, res.msg);
         refresh();
     #endif
     }
