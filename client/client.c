@@ -79,7 +79,19 @@ void connect_to_server()
         break;
 
         case 3: // will receive Team_table via server_response union
-        
+        printf("Requesting team table from server...\n");
+
+        int request_code = 3; 
+        send(sock, &request_code, sizeof(request_code), 0); 
+    
+        Server_response response;
+        memset(&response, 0, sizeof(response));
+    
+        if ((received_bytes = recv(sock, &response, sizeof(response), 0)) <= 0) {
+            perror("Failed to receive team table data");
+            break;
+        }
+        print_team_table(response.team_table);
         break;
     }
     
