@@ -4,6 +4,7 @@ int client_count = 0;
 
 void *handle_client(void *thread_sock) {
 	int sock = *(int *)thread_sock;
+	free(thread_sock);
 
 	request_packet req;
 	response_packet res;
@@ -17,50 +18,58 @@ void *handle_client(void *thread_sock) {
         perror("Failed to receive request_data1");
         close(sock);
 		client_count--;
-		free(thread_sock);
 		return NULL;
     }
 
-	printf("cmd: %d\n", req.cmd);
-
+#ifdef DEBUG
+	printf("[DEBUG] Received cmd: %d\n", req.cmd);
+#endif
 		
 	switch(req.cmd){
-		case 0: 	// server send Team_List to client
-			// FIX FIx according to new data struct
+		case 0:
+
+			// FIX Fix according to new data struct @clcok
+		
 			// Team_list team_list;
 			// team_list = get_team_list();
 			// if (send(sock, &team_list, sizeof(Team_list), 0)<= 0){
 			// 	perror("Failed to send team list response");
 			// }
+
 		break;
 
 		case 2:
-		printf("[asdfasdf] adfafasdfafasfaCreating new team.\n");
-		#ifdef DEBUG
-			printf("[DEBUG] adfafasdfafasfaCreating new team.\n");
-		#endif
 			teaminfo new_team;
 			memset(&new_team, 0, sizeof(teaminfo));
 			new_team = req.req.team_info;
 
             char* result = create_new_team(&new_team);
             
-			if (result == NULL) {
-                perror("Failed to create team");
+			if (strcmp(result, "Success") == 0) {
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
+
+				// TODO Add response struct here @p1utie
+
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				perror("Failed to create team");
 				res.status_code = 503;
 				strcpy(res.msg, "Failed to create team");
-            } else if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+			}
+
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
                 perror("Failed to send team creation response");
             }
 
-			free(result);
             break;
 	}
 
 	printf("Client disconnected.\n");
 	close(sock);
 	client_count--;
-	free(thread_sock);
 	return NULL;
 }
 

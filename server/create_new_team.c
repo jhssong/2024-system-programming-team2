@@ -100,7 +100,7 @@ char* create_new_team(teaminfo *new_team) {
 
     close(fd);
 
-    return NULL;
+    return "Success";
 }
 
 int revert_create_team(char *team_name, int has_file) {
