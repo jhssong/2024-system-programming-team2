@@ -4,19 +4,24 @@ int client_count = 0;
 
 void *handle_client(void *thread_sock) {
 	int sock = *(int *)thread_sock;
-	free(thread_sock);	
 
 	request_packet req;
 	response_packet res;
     int received_bytes = recv(sock, &req, sizeof(request_packet), 0);
+
+#ifdef DEBUG
+	printf("[DEBUG] received bytes: %d\n", received_bytes);
+#endif
+
 	if (received_bytes <= 0) {
-        perror("Failed to receive request_data");
+        perror("Failed to receive request_data1");
         close(sock);
 		client_count--;
+		free(thread_sock);
 		return NULL;
     }
 
-		printf("cmd: %d\n", req.cmd);
+	printf("cmd: %d\n", req.cmd);
 
 		
 	switch(req.cmd){
@@ -55,6 +60,7 @@ void *handle_client(void *thread_sock) {
 	printf("Client disconnected.\n");
 	close(sock);
 	client_count--;
+	free(thread_sock);
 	return NULL;
 }
 
@@ -106,7 +112,6 @@ int main() {
 			res.status_code = 200;
 			strcpy(res.msg, "Connected");
             send(client_sock, &res, sizeof(response_packet), 0);
-            close(client_sock);
 		}
 
 		client_count++;

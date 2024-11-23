@@ -1,7 +1,7 @@
 #include "create_new_team.h"
 
 int revert_create_team(char *team_name, int has_file);
-char* handle_creation_error(const char *error_msg, char *team_name, int has_file);
+char* handle_creation_error(char *error_msg, char *team_name, int has_file);
 
 char* create_new_team(teaminfo *new_team) {
 
@@ -125,7 +125,7 @@ int revert_create_team(char *team_name, int has_file) {
 	return 0;
 }
 
-char* handle_creation_error(const char *error_msg, char *team_name, int has_file) {
+char* handle_creation_error(char *error_msg, char *team_name, int has_file) {
     perror(error_msg);
     if (team_name && revert_create_team(team_name, has_file) != 0) {
         perror("Error during cleanup");
