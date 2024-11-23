@@ -8,6 +8,7 @@ void *handle_client(void *thread_sock) {
 
 	request_packet req;
 	response_packet res;
+	char* result;
     int received_bytes = recv(sock, &req, sizeof(request_packet), 0);
 
 #ifdef DEBUG
@@ -43,7 +44,7 @@ void *handle_client(void *thread_sock) {
 			memset(&new_team, 0, sizeof(teaminfo));
 			new_team = req.req.team_info;
 
-            char* result = create_new_team(&new_team);
+            result = create_new_team(&new_team);
             
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
@@ -65,6 +66,32 @@ void *handle_client(void *thread_sock) {
             }
 
             break;
+		case 4:
+			userinfo new_user;
+			memset(&new_user, 0, sizeof(userinfo));
+			new_user = req.req.user_info;
+
+            result = user_login(&new_user);
+            
+			if (strcmp(result, "Success") == 0) {
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
+
+				// TODO Add response struct here @p1utie
+
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				perror("Failed to create user");
+				res.status_code = 503;
+				strcpy(res.msg, "Failed to create user");
+			}
+
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+                perror("Failed to send user creation response");
+            }
+			break;
 	}
 
 	printf("Client disconnected.\n");

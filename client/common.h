@@ -15,7 +15,6 @@
 #include <sys/stat.h>
 
 #include "util.h"
-#include "client.h"
 
 #define APP_NAME "TTT"
 #define APP_VERSION "v0.0.1"

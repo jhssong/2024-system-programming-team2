@@ -117,4 +117,6 @@ void login() {
 #ifdef DEBUG
 	getchar();
 #endif
+
+	// TODO Go to table screen
 }
