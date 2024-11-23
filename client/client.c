@@ -3,6 +3,44 @@
 #define PORT 8080
 #define BUFFER_SIZE 100
 
+void print_team_table(short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
+    printf("      Sun   Mon   Tue   Wed   Thu   Fri   Sat\n");
+
+    for (int i = 0; i < TABLE_MAX_TIME; i++) {
+        int hour = 9 + (i / 2); 
+        char half = (i % 2 == 0) ? 'A' : 'B'; 
+        printf("%02d%c    ", hour, half); 
+
+        
+        for (int j = 0; j < TABLE_MAX_DAY; j++) {
+            int count = team_table[i][j];
+            
+            // Color and content based on count
+            if (count == 0) {
+                printf(" X   "); // No availability
+            } else if (count == 1) {
+                printf("\033[38;5;159m■     \033[0m"); //Lightest blue
+            } else if (count == 2) {
+                printf("\033[38;5;153m■     \033[0m"); 
+            } else if (count == 3) {
+                printf("\033[38;5;117m■     \033[0m"); 
+            } else if (count == 4) {
+                printf("\033[38;5;111m■     \033[0m"); 
+            } else if (count == 5) {
+                printf("\033[38;5;75m■     \033[0m"); 
+            } else if (count == 6) {
+                printf("\033[38;5;69m■     \033[0m"); 
+            } else if (count == 7) {
+                printf("\033[38;5;33m■     \033[0m"); 
+            } else if (count == 8) {
+                printf("\033[38;5;18m■     \033[0m"); // Darkest blue
+            }
+        }
+        printf("\n");
+    }
+}
+
+
 Server_response function_0(int sock) {
     // get team_directory via server response
     Server_response response;
