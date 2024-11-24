@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-Team_list get_team_list();
+teamlist get_team_list();
 
 #endif

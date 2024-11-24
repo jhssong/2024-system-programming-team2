@@ -28,15 +28,20 @@ void *handle_client(void *thread_sock) {
 		
 	switch(req.cmd){
 		case 0:
+			teamlist current_exist_team_list;
+			memset(&current_exist_team_list, 0, sizeof(teamlist));
+			current_exist_team_list = get_team_list();
+			res.res.team_list = current_exist_team_list;
+			int check = 0;
+			#ifdef DEBUG
+			while(check<res.res.team_list.size){
+				printf("%d %s\n", check++, res.res.team_list.team_list[check]);
+			}
+			#endif
 
-			// FIX Fix according to new data struct @clcok
-		
-			// Team_list team_list;
-			// team_list = get_team_list();
-			// if (send(sock, &team_list, sizeof(Team_list), 0)<= 0){
-			// 	perror("Failed to send team list response");
-			// }
-
+			if (send(sock, &res, sizeof(res), 0)<= 0) {
+				perror("Failed to send team list response");
+			}
 		break;
 
 		case 2:
