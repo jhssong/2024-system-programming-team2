@@ -81,6 +81,7 @@ extern short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 typedef union {
 	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+	teamlist team_list;
 } response;
 
 typedef struct {

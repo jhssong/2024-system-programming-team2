@@ -67,7 +67,6 @@ response connect_to_server(request_packet req) {
         refresh();
     #endif
     }
-    
     return res.res;
 }
 
