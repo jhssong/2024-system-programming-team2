@@ -4,6 +4,7 @@
 #include "greeting_menu.h"
 #include "create_new_team.h"
 #include "select_existing_team.h"
+#include "personal_time_table.h"
 #include "login.h"
 
 int main() {
