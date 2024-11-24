@@ -50,17 +50,30 @@ void *handle_client(void *thread_sock)
 		break;
 
 		case 3:
-                load_personal_table(personal_table, &member_count);
-                count_available_time(personal_table, member_count);
+                    printf("Command received: 3\n");
 
-                if (send(sock, team_table, sizeof(team_table), 0) <= 0) {
-                    perror("Failed to send team table");
-                } else {
-                    printf("Team table sent successfully.\n");
-                }
-		
-		break;
-	}
+	            char team_name[MAX_NAME_SIZE];
+	            strcpy(team_name, req_packet.req.user_table.team_name);
+	
+	            printf("Requested team: %s\n", team_name);
+	
+	            short personal_table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
+	            int member_count = 0;
+	
+	            make_team_table(personal_table, &member_count, team_name);
+	            count_available_time(personal_table, member_count);
+	
+	            res_packet.status_code = 200;
+	            snprintf(res_packet.msg, sizeof(res_packet.msg), "Team table created successfully");
+	            memcpy(res_packet.res.team_table, team_table, sizeof(team_table));
+	
+	            if (send(sock, &res_packet, sizeof(res_packet), 0) <= 0) {
+	                perror("Failed to send team table response");
+	            } else {
+	                printf("Team table sent successfully.\n");
+	            }
+	            break;
+		}
 	printf("Client disconnected.\n");
 	close(sock);
 	clnt_count--;
