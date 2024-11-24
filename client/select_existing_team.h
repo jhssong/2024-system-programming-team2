@@ -4,6 +4,7 @@
 #include "common.h"
 #include "util.h"
 #include "menu_selector.h"
+#include "client.h"
 
 int display_select_existing_team();
 

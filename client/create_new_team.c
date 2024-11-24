@@ -14,9 +14,9 @@ void display_create_new_team() {
 
 	cbreak();
     echo();
-	refresh();	
+	refresh();
 	
-	char team_name[51];
+	char team_name[MAX_NAME_SIZE];
 	getstr(team_name);
 
 													// TODO Add valid check (Duplictate check)
@@ -45,21 +45,27 @@ void display_create_new_team() {
 	echo();
     refresh();
 
-	Team_detail new_team;
+	teaminfo new_team;
 	strncpy(new_team.team_name, team_name, sizeof(team_name));
 	strncpy(new_team.team_pw, team_pw, sizeof(team_pw));
 
-	Server_response req_data;
-	memset(&req_data, 0, sizeof(Server_response));
-	req_data.team_detail = new_team;
+	request req_data;
+	memset(&req_data, 0, sizeof(teaminfo));
+	req_data.team_info = new_team;
+
+	request_packet req = {
+		2, req_data
+	};
 
 #ifdef DEBUG
 	printw("[DEBUG] Requesting creating new team.\n");
-	printw("[DEBUG]     name: %s\n", req_data.team_detail.team_name);
-	printw("[DEBUG]     pw:   %s\n", req_data.team_detail.team_pw);
-	printw("[DEBUG]     size: %zu\n", sizeof(Team_detail));
+	printw("[DEBUG]     cmd:  %d\n", req.cmd);
+	printw("[DEBUG]     name: %s\n", req.req.team_info.team_name);
+	printw("[DEBUG]     pw:   %s\n", req.req.team_info.team_pw);
+	printw("[DEBUG]     size: %zu\n", sizeof(teaminfo));
 	refresh();
 #endif
 
-	connect_to_server(1, req_data);
+	response res = connect_to_server(req);
+	team_info = new_team;
 }
