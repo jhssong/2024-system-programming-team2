@@ -154,8 +154,17 @@ void old_connect_to_server(int function_choose, Server_response req_data) {
             break;
 
         case 2: // will receive Personal_table via server_response union
+            send(sock, &req_data.personal_table, sizeof(Personal_Table), 0);
+            memset(&response, 0, sizeof(Server_response));
 
-        break;
+            Personal_Table loaded_user_table;
+            if((received_bytes = recv(sock, &loaded_user_table, sizeof(Personal_Table), 0)) <= 0){
+                perror("Failed to receive team data");
+                getchar();
+                break;
+            }
+            // load_user_table(loaded_user_table);  // FIXME
+            break;
 
         case 3: // will receive Team_table via server_response union
         

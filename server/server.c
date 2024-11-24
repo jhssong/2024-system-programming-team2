@@ -70,15 +70,11 @@ void *handle_client(void *thread_sock) {
 			userinfo new_user;
 			memset(&new_user, 0, sizeof(userinfo));
 			new_user = req.req.user_info;
-
-            result = user_login(&new_user);
+			result = user_login(&new_user);
             
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
-
-				// TODO Add response struct here @p1utie
-
 			} else {
 			#ifdef DEBUG
 				printf("[DEBUG] result: %s\n", result);
@@ -92,6 +88,27 @@ void *handle_client(void *thread_sock) {
                 perror("Failed to send user creation response");
             }
 			break;
+			
+			// TODO Add response struct here @p1utie
+			
+		case 5: // server receive Personal_Time_Table and send Team_Time_Table to client
+			Personal_Table personal_table;
+			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
+				perror("Failed to receive personal table data");
+                close(sock);
+                client_count--;
+                return NULL;
+			}else {
+				#ifdef DEBUG
+					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Personal_Table));
+				#endif
+			}
+
+			update_personal_table(&personal_table);	// at manage_personal_table.c
+
+			//TODO: make Team_Time_Table and send to client
+		break;	
+	
 	}
 
 	printf("Client disconnected.\n");

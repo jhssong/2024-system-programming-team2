@@ -12,6 +12,9 @@
 #include <time.h>
 #include <dirent.h>
 
+#define TABLE_MAX_TIME 26
+#define TABLE_MAX_DAY 7
+
 #define TEAM_BASE_DIR "team"
 #define TEAM_CONFIG_FILE_NAME "config.txt"
 #define USER_CONFIG_FILE_NAME "config.txt"
@@ -33,6 +36,12 @@
 #define MAX_NAME_SIZE 51
 #define CREATED_TIME_LEN 20
 
+#define USER_FOLDER_MODE 0777
+#define USER_CONFIG_FILE_MODE 0644
+#define USER_SCHEDULE_FILE_MODE 0644
+
+#define MAX_USER_SCHEDULE_FILE_PATH 120
+
 typedef struct {
 	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
 	int size;
@@ -46,12 +55,14 @@ typedef struct {
 } Team_detail;
 
 typedef struct {
+	char team_name[MAX_NAME_SIZE];
 	char username[MAX_NAME_SIZE];
-	short schedule[26][7];
+	short schedule[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Personal_Table;
 
 typedef struct{
-	short team_table[26][7];
+	char team_name[MAX_NAME_SIZE];
+	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Team_table;
 
 typedef union {
@@ -60,8 +71,6 @@ typedef union {
 	Personal_Table personal_table;
 	Team_table team_table;
 } Server_response;
-
-
 
 // ----
 
