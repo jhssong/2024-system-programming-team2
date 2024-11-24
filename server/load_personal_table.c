@@ -1,9 +1,9 @@
-#include "load_personal_table.h"
+#include "make_team_table.h"
 
 short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 
 // Function to load personal schedule tables for all users in a specific team
-void load_personal_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int *member_count, char *team_name) {
+void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int *member_count, char *team_name) {
     DIR *users_dir, *user_dir;
     struct dirent *user_entry;
     *member_count = 0;
