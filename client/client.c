@@ -117,20 +117,27 @@ void connect_to_server()
         break;
 
         case 3: // will receive Team_table via server_response union
-        printf("Requesting team table from server...\n");
+            req_packet.cmd = 3; // Command for requesting team table
+            send(sock, &req_packet, sizeof(request_packet), 0);
 
-        int request_code = 3; 
-        send(sock, &request_code, sizeof(request_code), 0); 
-    
-        Server_response response;
-        memset(&response, 0, sizeof(response));
-    
-        if ((received_bytes = recv(sock, &response, sizeof(response), 0)) <= 0) {
-            perror("Failed to receive team table data");
+        
+            if ((received_bytes = recv(sock, &res_packet, sizeof(response_packet), 0)) <= 0) {
+                perror("Failed to receive team table data");
+                close(sock);
+                exit(EXIT_FAILURE);
+            }
+
+            if (res_packet.status_code == 200) {
+                printf("Received Team Table:\n");
+                printf_team_table(response_packet.res.team_table);
+            } else {
+                printf("Failed to get team table: %s\n", res_packet.msg);
+            }
             break;
-        }
-        print_team_table(response.team_table);
-        break;
+            } else {
+                printf("Failed to get team table: %s\n", res_packet.msg);
+            }
+            break;
     }
     
     close(sock); // close socket
