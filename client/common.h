@@ -112,7 +112,7 @@ typedef struct {
 } Personal_Table;
 
 typedef struct{
-	char team_name[MAX_TEAM_NAME_LEN];
+	char team_name[MAX_NAME_SIZE];
 	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Team_table;
 

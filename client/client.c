@@ -163,7 +163,7 @@ void old_connect_to_server(int function_choose, Server_response req_data) {
                 getchar();
                 break;
             }
-            load_user_table(loaded_user_table);
+            // load_user_table(loaded_user_table);  // FIXME
             break;
 
         case 3: // will receive Team_table via server_response union
