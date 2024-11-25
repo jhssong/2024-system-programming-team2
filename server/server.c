@@ -11,6 +11,8 @@ void *handle_client(void *thread_sock) {
 	char* result;
     int received_bytes = recv(sock, &req, sizeof(request_packet), 0);
 
+	teaminfo new_team;
+
 #ifdef DEBUG
 	printf("[DEBUG] received bytes: %d\n", received_bytes);
 #endif
@@ -32,12 +34,12 @@ void *handle_client(void *thread_sock) {
 			memset(&current_exist_team_list, 0, sizeof(teamlist));
 			current_exist_team_list = get_team_list();
 			res.res.team_list = current_exist_team_list;
-			int check = 0;
-			#ifdef DEBUG
-			while(check<res.res.team_list.size){
-				printf("%d %s\n", check++, res.res.team_list.team_list[check]);
+			res.status_code = 200;
+		#ifdef DEBUG
+			for (int i = 0; i < res.res.team_list.size; i++) {
+				printf("[DEBUG] team #%d: %s\n", i, res.res.team_list.team_list[i]);
 			}
-			#endif
+		#endif
 
 			if (send(sock, &res, sizeof(res), 0)<= 0) {
 				perror("Failed to send team list response");
@@ -45,7 +47,6 @@ void *handle_client(void *thread_sock) {
 		break;
 
 		case 2:
-			teaminfo new_team;
 			memset(&new_team, 0, sizeof(teaminfo));
 			new_team = req.req.team_info;
 
@@ -71,6 +72,45 @@ void *handle_client(void *thread_sock) {
             }
 
             break;
+
+		case 3:
+			memset(&new_team, 0, sizeof(teaminfo));
+			new_team = req.req.team_info;
+
+            result = team_login_validator(&new_team);
+		#ifdef DEBUG
+			printf("[DEBUG] login validator result: %s\n", result);
+		#endif
+
+			if (strcmp(result, "Success") == 0) {
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
+			} else if (strcmp(result, "Correct") == 0) {
+				res.status_code = 202;
+				strcpy(res.msg, "Correct");
+			} else if (strcmp(result, "Team not found") == 0) {
+				fprintf(stderr, "Failed to check the team password");
+				res.status_code = 404;
+				strcpy(res.msg, "Team not found");
+			} else if (strcmp(result, "Team password incorrect") == 0) {
+				fprintf(stderr, "Team password incorrect");
+				res.status_code = 401;
+				strcpy(res.msg, "Team password incorrect");
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				perror("Failed to check the team password");
+				res.status_code = 503;
+				strcpy(res.msg, "Failed to check the team password");
+			}
+
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+                perror("Failed to send team creation response");
+            }
+
+			break;
+
 		case 4:
 			userinfo new_user;
 			memset(&new_user, 0, sizeof(userinfo));
@@ -80,6 +120,13 @@ void *handle_client(void *thread_sock) {
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
+			} else if (strcmp(result, "Correct") == 0) {
+				res.status_code = 202;
+				strcpy(res.msg, "Correct");
+			} else if (strcmp(result, "User password incorrect") == 0) {
+				fprintf(stderr, "User password incorrect\n");
+				res.status_code = 401;
+				strcpy(res.msg, "User password incorrect");
 			} else {
 			#ifdef DEBUG
 				printf("[DEBUG] result: %s\n", result);

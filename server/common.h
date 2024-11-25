@@ -30,7 +30,6 @@
 #define MAX_USER_CONFIG_FILE_PATH 200
 
 #define MAX_TEAM_COUNT 8
-#define MAX_TEAM_ID_LEN 9
 #define MAX_NAME_SIZE 51
 #define MAX_PW_SIZE 9
 #define MAX_NAME_SIZE 51
@@ -43,33 +42,13 @@
 #define MAX_USER_SCHEDULE_FILE_PATH 120
 
 typedef struct {
-	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
-	int size;
-} Team_list;
-
-typedef struct {
-	char team_id[MAX_TEAM_ID_LEN];
-	char team_pw[MAX_PW_SIZE];
-	char team_name[MAX_NAME_SIZE];
-	char created_time[CREATED_TIME_LEN];
-} Team_detail;
-
-typedef struct {
 	char team_name[MAX_NAME_SIZE];
 	char username[MAX_NAME_SIZE];
 	short schedule[TABLE_MAX_TIME][TABLE_MAX_DAY];
 } Personal_Table;
 
-typedef struct{
-	char team_name[MAX_NAME_SIZE];
-	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
-} Team_table;
-
 typedef union {
-	Team_list team_list;
-	Team_detail team_detail;
 	Personal_Table personal_table;
-	Team_table team_table;
 } Server_response;
 
 // ----

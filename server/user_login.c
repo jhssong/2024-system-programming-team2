@@ -14,11 +14,64 @@ char* user_login(userinfo *new_user) {
 	char user_folder_path[MAX_USER_FOLDER_PATH];
 	snprintf(user_folder_path, sizeof(user_folder_path), "%s/%s/%s", TEAM_BASE_DIR, new_user->team_name, new_user->user_name);
 
+	// Construct config file path
+    char config_file_path[MAX_USER_CONFIG_FILE_PATH];
+    snprintf(config_file_path, sizeof(config_file_path), "%s/%s", user_folder_path, USER_CONFIG_FILE_NAME);
+
 	// Check if the user folder already exists
     if (stat(user_folder_path, &statbuf) == 0) {
 		// If exists
+		int fd = open(config_file_path, O_RDONLY);
+		if (fd < 0) {
+			return handle_user_login_error("Error opening user config file", new_user, 0);
+		}
+		#ifdef DEBUG
+			printf("[DEBUG] Found existing user config file.\n");
+		#endif
 
-		// Read user config file
+		char buffer[MAX_NAME_SIZE]; 
+		ssize_t bytes_read;
+		int i = 0;
+		int is_name = 1;
+
+		while ((bytes_read = read(fd, &buffer[i], 1)) > 0) {
+			if (buffer[i] == '\n' || i == MAX_NAME_SIZE - 1) {
+				buffer[i] = '\0';
+				if (is_name) {
+				#ifdef DEBUG
+					printf("[DEBUG] Read user name: %s\n", buffer);
+					is_name = 0;
+				#endif
+				}
+				else {
+				#ifdef DEBUG
+					printf("[DEBUG] Read user pw: %s, input password: %s\n", buffer, new_user->user_pw);
+				#endif
+					close(fd);
+					if (strcmp(buffer, new_user->user_pw) == 0) {
+						return "Correct";
+					} else return "User password incorrect";
+					break;
+				}
+				i = 0; 
+			} else {
+				i++;
+			}
+		}
+
+#ifdef DEBUG
+		if (bytes_read == -1) {
+			perror("Error reading file");
+			close(fd);
+			return "Error reading file";
+		}
+
+		if (bytes_read == 0) {
+			printf("End of file reached.\n");
+		}
+#endif
+
+		return "Cannot open the user config file";
     }
 
 	// Create user folder
@@ -30,10 +83,6 @@ char* user_login(userinfo *new_user) {
 		printf("[DEBUG] New team directory created.\n");
 	#endif
 	}
-
-	// Construct config file path
-    char config_file_path[MAX_USER_CONFIG_FILE_PATH];
-    snprintf(config_file_path, sizeof(config_file_path), "%s/%s", user_folder_path, USER_CONFIG_FILE_NAME);
 
     // Create and write to config file
     int fd = creat(config_file_path, USER_CONFIG_FILE_MODE);
@@ -62,13 +111,13 @@ char* user_login(userinfo *new_user) {
 
 	#ifdef DEBUG
 		printf("[DEBUG] User login successfully.\n");
-		printf("[DEBUG]     name:         %s\n", new_user->user_name);
-		printf("[DEBUG]     pw:           %s\n", new_user->user_pw);
+		printf("[DEBUG]     name: %s\n", new_user->user_name);
+		printf("[DEBUG]     pw:   %s\n", new_user->user_pw);
 	#endif
 
     close(fd);
 
-    return "Success";
+    return "Correct";
 }
 
 int revert_user_login(userinfo *new_user, int has_file) {

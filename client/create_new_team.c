@@ -62,10 +62,9 @@ void display_create_new_team() {
 	printw("[DEBUG]     cmd:  %d\n", req.cmd);
 	printw("[DEBUG]     name: %s\n", req.req.team_info.team_name);
 	printw("[DEBUG]     pw:   %s\n", req.req.team_info.team_pw);
-	printw("[DEBUG]     size: %zu\n", sizeof(teaminfo));
 	refresh();
 #endif
 
-	response res = connect_to_server(req);
+	connect_to_server(req);
 	team_info = new_team;
 }

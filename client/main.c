@@ -31,14 +31,16 @@ int main() {
 
 		switch (selected_menu) {
 			case 0:											// Enter existing team
-				display_select_existing_team();
+				int res = display_select_existing_team();
+				if (res == -1) break;
+				login();
 				break;
 			case 1: 										// Create new team
 				display_create_new_team();
 				login();
 				break;
 			case 2: 										// About
-															// TODO Make About page if have time
+				// TODO Make About page if have time
 				break;
 			case 3: 										// Quit
 				move(window_height - 1, 0);
