@@ -1,57 +1,75 @@
 #include "server.h"
 
-#define PORT 8080
-#define BUFFER_SIZE 1024
-#define MAX_CLIENTS 8
+int client_count = 0;
 
-int clnt_count = 0;
-
-Server_response function_0 (){
-	Server_response team_directory;
-
-	// get team_directory func
-
-	return team_directory;
-}
-
-void *handle_client(void *thread_sock)
-{
+void *handle_client(void *thread_sock) {
 	int sock = *(int *)thread_sock;
 	free(thread_sock);
 
-	// char buffer[BUFFER_SIZE]; // receive info that client send(it is not used while function has completed)
-	int function_choose; // receive what func do
-	int bytes_read;
+	request_packet req;
+	response_packet res;
+	char* result;
+    int received_bytes = recv(sock, &req, sizeof(request_packet), 0);
 
+#ifdef DEBUG
+	printf("[DEBUG] received bytes: %d\n", received_bytes);
+#endif
 
-	if((bytes_read = recv(sock, &function_choose, sizeof(int), 0)) < 0){
-		perror("Cannot receive what func do");
-		exit(EXIT_FAILURE) ; // Disconnect 
-	}
+	if (received_bytes <= 0) {
+        perror("Failed to receive request_data1");
+        close(sock);
+		client_count--;
+		return NULL;
+    }
 
-	send(sock, &function_choose, sizeof(int), 0); // send client what client send
+#ifdef DEBUG
+	printf("[DEBUG] Received cmd: %d\n", req.cmd);
+#endif
+		
+	switch(req.cmd){
+		case 0:
+			teamlist current_exist_team_list;
+			memset(&current_exist_team_list, 0, sizeof(teamlist));
+			current_exist_team_list = get_team_list();
+			res.res.team_list = current_exist_team_list;
+			int check = 0;
+			#ifdef DEBUG
+			while(check<res.res.team_list.size){
+				printf("%d %s\n", check++, res.res.team_list.team_list[check]);
+			}
+			#endif
 
-	Server_response response;
-	memset(&response, 0, sizeof(Server_response));
-	
-	// below function that server send to client must be return type sever_response union!
-	switch(function_choose){
-		case 0: // server send Team_List to client
-			response = function_0();
-			send(sock, &response, sizeof(Server_response), 0);
+			if (send(sock, &res, sizeof(res), 0)<= 0) {
+				perror("Failed to send team list response");
+			}
 		break;
 
-		case 1: // server send Team_Detail to client
+		case 2:
+			teaminfo new_team;
+			memset(&new_team, 0, sizeof(teaminfo));
+			new_team = req.req.team_info;
 
-		break;
+            result = create_new_team(&new_team);
+            
+			if (strcmp(result, "Success") == 0) {
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
 
-		case 2: // server send Personal_Time_Table to client
+				// TODO Add response struct here @p1utie
 
-		break;
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				perror("Failed to create team");
+				res.status_code = 503;
+				strcpy(res.msg, "Failed to create team");
+			}
 
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+                perror("Failed to send team creation response");
+            }
 		case 3:
-                    printf("Command received: 3\n");
-
 	            char team_name[MAX_NAME_SIZE];
 	            strcpy(team_name, req_packet.req.user_table.team_name);
 	
@@ -73,77 +91,124 @@ void *handle_client(void *thread_sock)
 	                printf("Team table sent successfully.\n");
 	            }
 	            break;
-		}
+            break;
+		case 4:
+			userinfo new_user;
+			memset(&new_user, 0, sizeof(userinfo));
+			new_user = req.req.user_info;
+			result = user_login(&new_user);
+            
+			if (strcmp(result, "Success") == 0) {
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				perror("Failed to create user");
+				res.status_code = 503;
+				strcpy(res.msg, "Failed to create user");
+			}
+
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+                perror("Failed to send user creation response");
+            }
+			break;
+			
+			// TODO Add response struct here @p1utie
+			
+		case 5: // server receive Personal_Time_Table and send Team_Time_Table to client
+			Personal_Table personal_table;
+			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
+				perror("Failed to receive personal table data");
+                close(sock);
+                client_count--;
+                return NULL;
+			}else {
+				#ifdef DEBUG
+					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Personal_Table));
+				#endif
+			}
+
+			update_personal_table(&personal_table);	// at manage_personal_table.c
+
+			//TODO: make Team_Time_Table and send to client
+		break;	
+	
+	}
+
 	printf("Client disconnected.\n");
 	close(sock);
-	clnt_count--;
+	client_count--;
 	return NULL;
 }
 
-// server set 127.0.0.1:8080 
-int main()
-{
-	int serv_sock, clnt_sock;
-	struct sockaddr_in serv_addr, clnt_addr;
-	socklen_t clnt_addr_size;
+int main() {
+	int server_sock, client_sock;
+	struct sockaddr_in server_addr, client_addr;
+	socklen_t client_addr_size;
 
-	serv_sock = socket(PF_INET, SOCK_STREAM, 0); // create socket
-	if (serv_sock == -1){
+	server_sock = socket(PF_INET, SOCK_STREAM, 0);
+	if (server_sock == -1){
 		perror("sock() error");
 		exit(1);
 	}
 
-	memset(&serv_addr, 0, sizeof(serv_addr));
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_port = htons(PORT);
+	memset(&server_addr, 0, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	server_addr.sin_port = htons(PORT);
 
-	if (bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1){
+	if (bind(server_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1){
 		perror("bind() error");
-		close(serv_sock);
+		close(server_sock);
 		exit(1);
 	}
 
-	if (listen(serv_sock, 8) == -1){
+	if (listen(server_sock, 8) == -1){
 		perror("listen() error");
-		close(serv_sock);
+		close(server_sock);
 		exit(1);
 	}
 
 	while(1){
-		
-		if (clnt_count == 9) {
-    		perror("Server max client is 8!");
-    		// send "Server full" message and disconnect
-    		const char *bad = "Server full";
-  	  		send(clnt_sock, bad, strlen(bad), 0);
-	    	close(clnt_sock);
-    		continue;
-		}else{
-			const char *good = "Server is not full";
-			send(clnt_sock, good, strlen(good), 0);
+		client_addr_size = sizeof(client_addr);
+        if ((client_sock = accept(server_sock, (struct sockaddr *)&client_addr, &client_addr_size)) == -1) {
+            perror("accept() error");
+            continue;
+        }
+
+		response_packet res;
+		memset(&res, 0, sizeof(response_packet));
+
+        if (client_count >= 8) {
+			res.status_code = 503;
+			strcpy(res.msg, "Server full");
+            send(client_sock, &res, sizeof(response_packet), 0);
+            close(client_sock);
+            continue;
+        } else {
+			res.status_code = 200;
+			strcpy(res.msg, "Connected");
+            send(client_sock, &res, sizeof(response_packet), 0);
 		}
 
-		if((clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_addr, &clnt_addr_size)) == -1){
-			perror("accept() error");
-			continue;
-		}
-
+		client_count++;
 		printf("New connection accepted.\n");
-		clnt_count++;
 
 		pthread_t thread_id;
 		int *thread_sock = malloc(sizeof(int));
-		*thread_sock = clnt_sock;
+		*thread_sock = client_sock;
 		if (pthread_create(&thread_id, NULL, handle_client, thread_sock) != 0){
 			perror("Could not create thread");
-			clnt_count--;
-			close(clnt_sock);
+			client_count--;
+			close(client_sock);
 			free(thread_sock);
 		}
 		pthread_detach(thread_id);
 	}
 
-	close(serv_sock);
+	close(server_sock);
 	return 0;
 }
+
