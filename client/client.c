@@ -168,7 +168,7 @@ void old_connect_to_server(int function_choose, Server_response req_data) {
         case 3: // will receive Team_table via server_response union
             strncpy(req.req.user_table.team_name, team_info.team_name, MAX_NAME_SIZE);
             
-            if (send(sock, &req.req.user_table.team_name, sizeof(request_packet), 0) <= 0) {
+            if (send(sock, &req, sizeof(request_packet), 0) <= 0) {
                 perror("Failed to send team table request");
                 close(sock);
                 exit(EXIT_FAILURE);
