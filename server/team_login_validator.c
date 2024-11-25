@@ -58,7 +58,7 @@ char* team_login_validator(teaminfo *new_team) {
 				#endif
 					close(fd);
 					if (strcmp(buffer, new_team->team_pw) == 0) {
-						return "Success";
+						return "Correct";
 					} else return "Team password incorrect";
 					break;
 				case 2:

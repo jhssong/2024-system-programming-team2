@@ -11,6 +11,5 @@
 #define BUFFER_SIZE 100
 
 response connect_to_server(request_packet req);
-void old_connect_to_server(int function_choose, Server_response req_data);
 
 #endif

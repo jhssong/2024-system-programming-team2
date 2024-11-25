@@ -82,6 +82,7 @@ typedef union {
 	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 	teamlist team_list;
+	char* msg;
 } response;
 
 typedef struct {
@@ -96,32 +97,12 @@ void init_global_variable();
 // deprecated ---------------------------------------------- 
 
 typedef struct {
-	char team_list[MAX_TEAM_COUNT][MAX_NAME_SIZE];
-	int size;
-} Team_list;
-
-typedef struct {
-	char team_id[MAX_TEAM_ID_LEN];
-	char team_pw[MAX_PW_SIZE];
-	char team_name[MAX_NAME_SIZE];
-	char created_time[CREATED_TIME_LEN];
-} Team_detail;
-
-typedef struct {
 	char username[MAX_NAME_SIZE];
 	short schedule[26][7];
 } Personal_Table;
 
-typedef struct{
-	char team_name[MAX_NAME_SIZE];
-	short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
-} Team_table;
-
 typedef union {
-	Team_list team_list;
-	Team_detail team_detail;
 	Personal_Table personal_table;
-	Team_table team_table;
 } Server_response;
 
 #endif

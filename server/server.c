@@ -81,11 +81,12 @@ void *handle_client(void *thread_sock) {
 			printf("[DEBUG] login validator result: %s\n", result);
 		#endif
 
-            
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
-
+			} else if (strcmp(result, "Correct") == 0) {
+				res.status_code = 202;
+				strcpy(res.msg, "Correct");
 			} else if (strcmp(result, "Team not found") == 0) {
 				fprintf(stderr, "Failed to check the team password");
 				res.status_code = 404;

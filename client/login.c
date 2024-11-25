@@ -1,6 +1,10 @@
 #include "login.h"
 
 void login() {
+	clear();
+	display_title_bar();
+	show_title("Login to the team");
+
 	// Ask team password
 	addstr("Enter the team password");
 	printw("\n: ");
@@ -26,7 +30,30 @@ void login() {
 	echo();
 	refresh();
 
-	while (strcmp(team_pw, team_info.team_pw) != 0) {
+	// Request team pw validation
+	teaminfo temp_team;
+	strncpy(temp_team.team_name, team_info.team_name, sizeof(temp_team.team_name));
+	strncpy(temp_team.team_pw, team_pw, sizeof(team_pw));
+	
+	request team_login_req_data;
+	memset(&team_login_req_data, 0, sizeof(teaminfo));
+	team_login_req_data.team_info = temp_team;
+
+	request_packet team_login_req = {
+		3, team_login_req_data
+	};
+
+#ifdef DEBUG
+	printw("[DEBUG] Requesting login to the team.\n");
+	printw("[DEBUG]     cmd:  %d\n", team_login_req.cmd);
+	printw("[DEBUG]     name: %s\n", team_login_req.req.team_info.team_name);
+	printw("[DEBUG]     pw:   %s\n", team_login_req.req.team_info.team_pw);
+	refresh();
+#endif
+
+	response team_login_res = connect_to_server(team_login_req);
+
+	while (strcmp(team_login_res.msg, "Correct") != 0) {  // FIXME Logical issue
 		// Password incorrect ask again
 		addstr("Wrong password! Enter the team password again");
 		printw("\n: ");
@@ -50,7 +77,22 @@ void login() {
 		printw("\n");
 		echo();
 		refresh();
+
+		strncpy(temp_team.team_pw, team_pw, sizeof(team_pw));
+		team_login_req.req.team_info = temp_team;
+
+	#ifdef DEBUG
+		printw("[DEBUG] Requesting login to the team.\n");
+		printw("[DEBUG]     cmd:  %d\n", team_login_req.cmd);
+		printw("[DEBUG]     name: %s\n", team_login_req.req.team_info.team_name);
+		printw("[DEBUG]     pw:   %s\n", team_login_req.req.team_info.team_pw);
+		refresh();
+	#endif
+
+		team_login_res = connect_to_server(team_login_req);
 	}
+
+	strncpy(team_info.team_pw, team_pw, sizeof(team_pw));
 
 	// Ask user name
 	addstr("Enter the user name");
@@ -77,7 +119,7 @@ void login() {
         if (ch != EOF && ((ch >= 48 && ch <= 57) 	// Recieve only numeric or alphabet
 			|| (ch >= 65 && ch <= 90) 
 			|| (ch >= 97 && ch <= 122))) {
-            team_pw[user_pw_index++] = ch;
+            user_pw[user_pw_index++] = ch;
             addch('*');
             refresh();
         }
@@ -93,26 +135,25 @@ void login() {
 	strncpy(new_user.user_name, user_name, sizeof(user_name));
 	strncpy(new_user.user_pw, user_pw, sizeof(user_pw));
 
-	request req_data;
-	memset(&req_data, 0, sizeof(userinfo));
-	req_data.user_info = new_user;
+	request user_login_req_data;
+	memset(&user_login_req_data, 0, sizeof(userinfo));
+	user_login_req_data.user_info = new_user;
 
-	request_packet req = {
-		4, req_data
+	request_packet user_login_req = {
+		4, user_login_req_data
 	};
 
 #ifdef DEBUG
 	printw("[DEBUG] Requesting login.\n");
-	printw("[DEBUG]     cmd:       %d\n", req.cmd);
-	printw("[DEBUG]     team name: %s\n", req.req.user_info.team_name);
-	printw("[DEBUG]     user name: %s\n", req.req.user_info.user_name);
-	printw("[DEBUG]     user pw:   %s\n", req.req.user_info.user_pw);
-	printw("[DEBUG]     size:      %zu\n", sizeof(userinfo));
+	printw("[DEBUG]     cmd:       %d\n", user_login_req.cmd);
+	printw("[DEBUG]     team name: %s\n", user_login_req.req.user_info.team_name);
+	printw("[DEBUG]     user name: %s\n", user_login_req.req.user_info.user_name);
+	printw("[DEBUG]     user pw:   %s\n", user_login_req.req.user_info.user_pw);
 	refresh();
 #endif
 
-	response res = connect_to_server(req);
-	// user_info = new_user;
+	response user_login_res = connect_to_server(user_login_req);
+	user_info = new_user;
 
 #ifdef DEBUG
 	getchar();
