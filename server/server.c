@@ -34,6 +34,7 @@ void *handle_client(void *thread_sock) {
 			memset(&current_exist_team_list, 0, sizeof(teamlist));
 			current_exist_team_list = get_team_list();
 			res.res.team_list = current_exist_team_list;
+			res.status_code = 200;
 		#ifdef DEBUG
 			for (int i = 0; i < res.res.team_list.size; i++) {
 				printf("[DEBUG] team #%d: %s\n", i, res.res.team_list.team_list[i]);
@@ -119,6 +120,13 @@ void *handle_client(void *thread_sock) {
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
+			} else if (strcmp(result, "Correct") == 0) {
+				res.status_code = 202;
+				strcpy(res.msg, "Correct");
+			} else if (strcmp(result, "User password incorrect") == 0) {
+				fprintf(stderr, "User password incorrect\n");
+				res.status_code = 401;
+				strcpy(res.msg, "User password incorrect");
 			} else {
 			#ifdef DEBUG
 				printf("[DEBUG] result: %s\n", result);

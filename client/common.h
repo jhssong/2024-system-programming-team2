@@ -22,19 +22,14 @@
 #define TERMINAL_MIN_WIDTH 50
 #define TERMINAL_MIN_HEIGHT 30	// 09:00 ~ 22:00
 
-#define TEAM_TABLE_START_ROW 4		// TODO remove
-#define TEAM_TABLE_START_COL 2		// TODO remove
 #define PERSONAL_TABLE_START_ROW 4	// TODO remove
 #define PERSONAL_TABLE_START_COL 19	// TODO remove
-#define MENU_START_ROW 4			// TODO remove
-#define MENU_START_COL 36			// TODO remove
 
 #define MAX_NAME_SIZE 51
 #define MAX_PW_SIZE 9
 #define CREATED_TIME_LEN 20
 
 #define MAX_TEAM_COUNT 8
-#define MAX_TEAM_ID_LEN 9  // TODO remove
 
 #define TABLE_MAX_TIME 26
 #define TABLE_MAX_DAY 7

@@ -53,7 +53,8 @@ void login() {
 
 	response team_login_res = connect_to_server(team_login_req);
 
-	while (strcmp(team_login_res.msg, "Correct") != 0) {  // FIXME Logical issue
+	while (strcmp(team_login_res.msg, "Correct") != 0) {
+		clear();
 		// Password incorrect ask again
 		addstr("Wrong password! Enter the team password again");
 		printw("\n: ");
@@ -153,6 +154,48 @@ void login() {
 #endif
 
 	response user_login_res = connect_to_server(user_login_req);
+
+	while (strcmp(user_login_res.msg, "Correct") != 0) {
+		clear();
+		// Password incorrect ask again
+		addstr("Wrong password! Enter the user password again");
+		printw("\n: ");
+
+		cbreak();
+		noecho();
+		refresh();
+		
+		user_pw_index = 0;
+		while (user_pw_index < 8) {
+			int ch = getch();
+			if (ch != EOF && ((ch >= 48 && ch <= 57) 	// Recieve only numeric or alphabet
+				|| (ch >= 65 && ch <= 90) 
+				|| (ch >= 97 && ch <= 122))) {
+				user_pw[user_pw_index++] = ch;
+				addch('*');
+				refresh();
+			}
+		}
+		user_pw[8] = '\0';
+		printw("\n");
+		echo();
+		refresh();
+
+		strncpy(new_user.user_pw, user_pw, sizeof(user_pw));
+		user_login_req.req.user_info = new_user;
+
+	#ifdef DEBUG
+		printw("[DEBUG] Requesting login.\n");
+		printw("[DEBUG]     cmd:       %d\n", user_login_req.cmd);
+		printw("[DEBUG]     team name: %s\n", user_login_req.req.user_info.team_name);
+		printw("[DEBUG]     user name: %s\n", user_login_req.req.user_info.user_name);
+		printw("[DEBUG]     user pw:   %s\n", user_login_req.req.user_info.user_pw);
+		refresh();
+	#endif
+
+		user_login_res = connect_to_server(user_login_req);
+	}
+
 	user_info = new_user;
 
 #ifdef DEBUG

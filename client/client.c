@@ -73,7 +73,7 @@ response connect_to_server(request_packet req) {
     } else {
         close(sock);
     #ifdef DEBUG
-        printw("[DEBUG] status %d with: %s\n", res.status_code, res.msg);
+        printw("\n[DEBUG] status %d with: %s\n", res.status_code, res.msg);
         refresh();
     #endif
     }

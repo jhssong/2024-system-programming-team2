@@ -32,16 +32,26 @@ char* user_login(userinfo *new_user) {
 		char buffer[MAX_NAME_SIZE]; 
 		ssize_t bytes_read;
 		int i = 0;
-		int isName = 1;
+		int is_name = 1;
 
 		while ((bytes_read = read(fd, &buffer[i], 1)) > 0) {
 			if (buffer[i] == '\n' || i == MAX_NAME_SIZE - 1) {
 				buffer[i] = '\0';
-				if (isName) {
-					printf("name Read line: %s\n", buffer);
+				if (is_name) {
+				#ifdef DEBUG
+					printf("[DEBUG] Read user name: %s\n", buffer);
+					is_name = 0;
+				#endif
 				}
 				else {
-					printf("pw read line: %s\n", buffer);
+				#ifdef DEBUG
+					printf("[DEBUG] Read user pw: %s, input password: %s\n", buffer, new_user->user_pw);
+				#endif
+					close(fd);
+					if (strcmp(buffer, new_user->user_pw) == 0) {
+						return "Correct";
+					} else return "User password incorrect";
+					break;
 				}
 				i = 0; 
 			} else {
@@ -49,6 +59,7 @@ char* user_login(userinfo *new_user) {
 			}
 		}
 
+#ifdef DEBUG
 		if (bytes_read == -1) {
 			perror("Error reading file");
 			close(fd);
@@ -58,9 +69,9 @@ char* user_login(userinfo *new_user) {
 		if (bytes_read == 0) {
 			printf("End of file reached.\n");
 		}
+#endif
 
-		close(fd);
-		return "Success";
+		return "Cannot open the user config file";
     }
 
 	// Create user folder
@@ -106,7 +117,7 @@ char* user_login(userinfo *new_user) {
 
     close(fd);
 
-    return "Success";
+    return "Correct";
 }
 
 int revert_user_login(userinfo *new_user, int has_file) {

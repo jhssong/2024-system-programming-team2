@@ -30,7 +30,6 @@
 #define MAX_USER_CONFIG_FILE_PATH 200
 
 #define MAX_TEAM_COUNT 8
-#define MAX_TEAM_ID_LEN 9
 #define MAX_NAME_SIZE 51
 #define MAX_PW_SIZE 9
 #define MAX_NAME_SIZE 51
