@@ -129,6 +129,19 @@ void *handle_client(void *thread_sock) {
 			update_personal_table(&personal_table);	// at manage_personal_table.c
 
 			//TODO: make Team_Time_Table and send to client
+			short personal_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
+		        int member_count = 0;
+	
+		        make_team_table(personal_tables, &member_count, personal_table.team_name);
+		        count_available_time(personal_tables, member_count);
+			
+		        res.status_code = 200;
+		        memcpy(res.res.team_table, team_table, sizeof(team_table));
+		
+		        if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+		            perror("Failed to send team table response");
+		        } 
+		    }
 		break;	
 	
 	}
