@@ -129,6 +129,8 @@ void *handle_client(void *thread_sock) {
 			update_personal_table(&personal_table);	// at manage_personal_table.c
 
 			//TODO: make Team_Time_Table and send to client
+			char team_name[MAX_NAME_SIZE];
+	                strcpy(team_name, req.req.user_table.team_name);
 			short personal_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 		        int member_count = 0;
 	
