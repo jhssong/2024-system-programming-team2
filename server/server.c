@@ -71,9 +71,7 @@ void *handle_client(void *thread_sock) {
             }
 		case 3:
 	            char team_name[MAX_NAME_SIZE];
-	            strcpy(team_name, req_packet.req.user_table.team_name);
-	
-	            printf("Requested team: %s\n", team_name);
+	            strcpy(team_name, req.req.user_table.team_name);
 	
 	            short personal_table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 	            int member_count = 0;
@@ -83,15 +81,13 @@ void *handle_client(void *thread_sock) {
 	
 	            res_packet.status_code = 200;
 	            snprintf(res_packet.msg, sizeof(res_packet.msg), "Team table created successfully");
-	            memcpy(res_packet.res.team_table, team_table, sizeof(team_table));
+	            memcpy(res.res.team_table, team_table, sizeof(team_table));
 	
 	            if (send(sock, &res_packet, sizeof(res_packet), 0) <= 0) {
 	                perror("Failed to send team table response");
-	            } else {
-	                printf("Team table sent successfully.\n");
-	            }
+	            } 
 	            break;
-            break;
+		
 		case 4:
 			userinfo new_user;
 			memset(&new_user, 0, sizeof(userinfo));
