@@ -166,22 +166,22 @@ void old_connect_to_server(int function_choose, Server_response req_data) {
             break;
 
         case 3: // will receive Team_table via server_response union
-            strncpy(req_packet.req.user_table.team_name, team_info.team_name, MAX_NAME_SIZE);
+            strncpy(req.req.user_table.team_name, team_info.team_name, MAX_NAME_SIZE);
             
-            if (send(sock, &req_packet, sizeof(request_packet), 0) <= 0) {
+            if (send(sock, &req.req.user_table.team_name, sizeof(request_packet), 0) <= 0) {
                 perror("Failed to send team table request");
                 close(sock);
                 exit(EXIT_FAILURE);
             }
 
-            if ((received_bytes = recv(sock, &res_packet, sizeof(response_packet), 0)) <= 0) {
+            if ((received_bytes = recv(sock, &res, sizeof(response_packet), 0)) <= 0) {
                 perror("Failed to receive team table response");
                 close(sock);
                 exit(EXIT_FAILURE);
             }
             
             if (res_packet.status_code == 200) {
-                memcpy(team_table, res_packet.res.team_table, sizeof(team_table));
+                memcpy(team_table, res.res.team_table, sizeof(team_table));
             } else {
                 printf("Failed to get team table);
             }
