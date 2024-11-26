@@ -1,6 +1,6 @@
-#include "manage_personal_table.h"
+#include "manage_user_table.h"
 
-void send_personal_table(Personal_Table *personal_table) {
+void send_user_table(Personal_Table *personal_table) {
     char file_path[MAX_USER_SCHEDULE_FILE_PATH];
     struct stat statbuf;
 
@@ -46,7 +46,7 @@ void send_personal_table(Personal_Table *personal_table) {
     }
 }
 
-void update_personal_table(Personal_Table *personal_table) {
+void update_user_table(Personal_Table *personal_table) {
     char file_path[MAX_USER_SCHEDULE_FILE_PATH];
 
     // Construct the file path: TEAM_BASE_DIR/team_name/username/schedule.bin
