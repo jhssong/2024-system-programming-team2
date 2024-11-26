@@ -172,7 +172,7 @@ void *handle_client(void *thread_sock) {
 
 			result = update_user_table_file(&new_user_table);
 
-			if(strcmp(result, "Success")){
+			if(strcmp(result, "Success") == 0){
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
 			} else {

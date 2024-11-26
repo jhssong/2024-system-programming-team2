@@ -45,7 +45,10 @@ void send_schedule_to_server(void) {
     };
 
     response update_user_table_res = connect_to_server(update_user_table_req);
-    memcpy(update_user_table_res.team_table, team_table, sizeof(update_user_table_res.team_table));
+
+    if (strcmp(update_user_table_res.msg, "Success") == 0) {
+        memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+    }
 
     //TODO check res msg and update team table array
 

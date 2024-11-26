@@ -92,7 +92,7 @@ void login() {
 
 		team_login_res = connect_to_server(team_login_req);
 	}	
-	memcpy(team_login_res.team_table, team_table, sizeof(team_login_res.team_table));
+	memcpy(team_table, team_login_res.team_table, sizeof(team_table));
 	strncpy(team_info.team_pw, team_pw, sizeof(team_pw));
 
 
@@ -199,7 +199,7 @@ void login() {
 
 	user_info = new_user;
 
-	memcpy(user_login_res.user_table, user_table, sizeof(user_login_res.user_table));
+	memcpy(user_table, user_login_res.user_table, sizeof(user_table));
 #ifdef DEBUG
 	getchar();
 #endif
