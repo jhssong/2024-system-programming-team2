@@ -19,6 +19,7 @@ void handle_quit(int signum) {
 
 int main() {
 	signal(SIGINT, handle_quit);
+	signal(SIGQUIT, handle_quit);
 	init_global_variable();
 	get_window_size();  									// Get window size and save it in constant.c
 	initscr();  											// Turns on curses
