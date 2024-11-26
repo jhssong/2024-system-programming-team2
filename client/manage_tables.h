@@ -12,5 +12,6 @@ void periodic_save(int signum);
 void process_input(void);
 void draw_table(int cursor_row, int cursor_col);
 void update_cell(int cursor_row, int cursor_col);
+void table_main(void);
 
 #endif

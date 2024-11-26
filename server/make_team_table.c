@@ -1,10 +1,8 @@
 #include "make_team_table.h"
 
-short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
-
 // Function to load personal schedule tables for all users in a specific team
 void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int *member_count, char *team_name) {
-    DIR *team_dir, *user_dir;
+    DIR *team_dir;//, *user_dir;
     struct dirent *entry;
     *member_count = 0;
 
@@ -71,7 +69,7 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
 
 
 // Function to count the available times for the team based on individual schedules
-void count_available_time(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int member_count) {
+void count_available_time(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int member_count, short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
     if (member_count == 0) {
         printf("No members to process. Team table will be empty.\n");
         return;

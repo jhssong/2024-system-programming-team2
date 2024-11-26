@@ -82,12 +82,19 @@ void *handle_client(void *thread_sock) {
 			printf("[DEBUG] login validator result: %s\n", result);
 		#endif
 
+
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
 			} else if (strcmp(result, "Correct") == 0) {
 				res.status_code = 202;
 				strcpy(res.msg, "Correct");
+
+				//Send team_table only when the team login is successful
+				short user_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
+				int member_count = 0;
+				make_team_table(user_tables, &member_count, req.req.team_info.team_name);
+				count_available_time(user_tables, member_count, res.res.team_table);
 			} else if (strcmp(result, "Team not found") == 0) {
 				fprintf(stderr, "Failed to check the team password");
 				res.status_code = 404;
@@ -123,6 +130,9 @@ void *handle_client(void *thread_sock) {
 			} else if (strcmp(result, "Correct") == 0) {
 				res.status_code = 202;
 				strcpy(res.msg, "Correct");
+
+				//Send user_table only when the user login is successful
+				load_user_table_from_file(&new_user, res.res.user_table);
 			} else if (strcmp(result, "User password incorrect") == 0) {
 				fprintf(stderr, "User password incorrect\n");
 				res.status_code = 401;
@@ -144,7 +154,47 @@ void *handle_client(void *thread_sock) {
 			// TODO Add response struct here @p1utie
 			
 		case 5: // server receive Personal_Time_Table and send Team_Time_Table to client
-			Personal_Table personal_table;
+			
+			update_user_table new_user_table;
+			memset(&new_user_table, 0, sizeof(update_user_table));
+			new_user_table=req.req.user_table;
+			#ifdef DEBUG
+				printf("[DEBUG] received user_name: %s\n", new_user_table.user_name);
+				printf("[DEBUG] received team_name: %s\n", new_user_table.team_name);
+				printf("[DEBUG] received table:\n");
+				for(int c5_i=0; c5_i<TABLE_MAX_TIME; c5_i++){
+					for(int c5_j=0; c5_j<TABLE_MAX_DAY; c5_j++){
+						printf("%d ", new_user_table.user_table[c5_i][c5_j]);
+					}
+					printf("\n");
+				}
+			#endif
+
+			result = update_user_table_file(&new_user_table);
+
+			if(strcmp(result, "Success")){
+				res.status_code = 200;
+				strcpy(res.msg, "Success");
+			} else {
+			#ifdef DEBUG
+				printf("[DEBUG] result: %s\n", result);
+			#endif
+				res.status_code = 404;
+				strcpy(res.msg, result);
+			}
+
+			short user_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
+			int member_count = 0;
+			make_team_table(user_tables, &member_count, req.req.user_table.team_name);
+			count_available_time(user_tables, member_count, res.res.team_table);
+
+			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
+                perror("Failed to send update user table's response");
+            }
+			break;
+
+
+			/*Personal_Table personal_table;
 			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
 				perror("Failed to receive personal table data");
                 close(sock);
@@ -158,7 +208,7 @@ void *handle_client(void *thread_sock) {
 
 			update_personal_table(&personal_table);	// at manage_personal_table.c
 
-			//TODO: make Team_Time_Table and send to client
+			//TODO: make Team_Time_Table and send to client*/
 		break;	
 	
 	}

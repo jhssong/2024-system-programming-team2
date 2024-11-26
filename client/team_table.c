@@ -1,17 +1,6 @@
 #include "team_table.h"
 
-void print_team_table(short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
-
-    start_color();
-
-    // define color pairs
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_RED, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(4, COLOR_GREEN, COLOR_BLACK);
-    init_pair(5, COLOR_CYAN, COLOR_BLACK);
-    init_pair(6, COLOR_BLUE, COLOR_BLACK);
-    init_pair(7, COLOR_MAGENTA, COLOR_BLACK);
+void print_team_table(void) {
 
     //print team table
     mvprintw(TEAM_TABLE_START_ROW - 1, TEAM_TABLE_START_COL + 6, "Sun   Mon   Tue   Wed   Thu   Fri   Sat");
@@ -29,23 +18,23 @@ void print_team_table(short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
 
             // Determine color based on the count
             if (count == 0) {
-                color_pair = 1; 
+                color_pair = 11; 
             } else if (count == 1) {
-                color_pair = 1;
+                color_pair = 11;
             } else if (count == 2) {
-                color_pair = 1;
+                color_pair = 11;
             } else if (count == 3) {
-                color_pair = 2;
+                color_pair = 12;
             } else if (count == 4) {
-                color_pair = 3;
+                color_pair = 13;
             } else if (count == 5) {
-                color_pair = 4;
+                color_pair = 14;
             } else if (count == 6) {
-                color_pair = 5;
+                color_pair = 15;
             } else if (count == 7) {
-                color_pair = 6;
+                color_pair = 16;
             } else if (count == 8) {
-                color_pair = 7;
+                color_pair = 17;
             }
 
             attron(COLOR_PAIR(color_pair));
@@ -60,13 +49,13 @@ void print_team_table(short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
         }
     }
 
-    refresh();
-
+    //refresh(); //TODO Modify to avoid overlap with actions in the user_table
+    /*
     // Wait for user input to exit
     while (1) {
         char ch = getch();
         if (ch == 'q') {
             break;
         }
-    }
+    }*/
 }
