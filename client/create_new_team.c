@@ -40,33 +40,6 @@ int display_create_new_team() {
 		if (check_name) break;
 		else is_ask_team_name_again = 1;
 	}
-
-	// addstr(TEAM_NAME_QUESTION);						// Ask team name
-	// printw("\n: ");
-
-	// cbreak();
-    // echo();
-	// refresh();
-	
-	// char team_name[MAX_NAME_SIZE];
-	// getstr(team_name);
-
-	// request_packet check_team_count_packet;
-	// check_team_count_packet.cmd = 0;
-	// response check_team_count_res = connect_to_server(check_team_count_packet);
-
-	// if (check_team_count_res.team_list.size > 7) {
-	// 	return 1;
-	// }
-
-	// const char* existing_team_list[MAX_TEAM_COUNT + 1];
-	// for (int i = 0; i < check_team_count_res.team_list.size; i++) {
-	// 	existing_team_list[i] = check_team_count_res.team_list.team_list[i];
-	// 	if (strcmp(check_team_count_res.team_list.team_list[i], team_name) == 0) {
-	// 		return 2;
-	// 	}
-	// }
-													// TODO Add valid check (Duplictate check)
 	
 	addstr(TEAM_PW_QUESTION);						// Ask team password
 	printw("\n: ");
