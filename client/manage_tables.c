@@ -1,6 +1,4 @@
-#include "personal_time_table.h"
-
-Personal_Table user_table;
+#include "manage_tables.h"
 
 // Initialize screen for personal table
 void initialize_screen(void) {
@@ -18,21 +16,6 @@ void initialize_screen(void) {
     init_pair(1, COLOR_WHITE, COLOR_BLACK);  // White text - black background (represents 0)
     init_pair(2, COLOR_BLACK, COLOR_WHITE);  // Black text - white background (represents 1)
     init_pair(3, COLOR_BLACK, COLOR_YELLOW); // Black text - yellow background (cursor position)
-}
-void load_user_table(Personal_Table loaded_user_table){
-    user_table=loaded_user_table;
-}
-
-// load user's schedule from server
-void load_schedule(char* team_name, char* username) {
-    Personal_Table teamname_and_username;
-    strncpy(teamname_and_username.username, username, sizeof(teamname_and_username.username));
-	strncpy(teamname_and_username.team_name, team_name, sizeof(teamname_and_username.team_name));
-
-	Server_response req_data;
-	memset(&req_data, 0, sizeof(Server_response));
-	req_data.personal_table = teamname_and_username;
-    connect_to_server(2, req_data);
 }
 
 // send user's schedule to server
@@ -87,7 +70,7 @@ void draw_table(int cursor_row, int cursor_col) {
         for (int j = 0; j < TABLE_MAX_DAY; j++) {
             if (i == cursor_row && j == cursor_col) {
                 attron(COLOR_PAIR(3));  // cursor position: Black text - yellow background
-            } else if (user_table.schedule[i][j] == 1) {
+            } else if (user_table[i][j] == 1) {
                 attron(COLOR_PAIR(2));  // 1: Black text - white background
             } else {
                 attron(COLOR_PAIR(1));  // 0: White text - black background
@@ -105,7 +88,7 @@ void draw_table(int cursor_row, int cursor_col) {
 }
 
 void update_cell(int cursor_row, int cursor_col) {
-    user_table.schedule[cursor_row][cursor_col] = !user_table.schedule[cursor_row][cursor_col];
+    user_table[cursor_row][cursor_col] = !user_table[cursor_row][cursor_col];
 }
 
 void personal_main(char* team_name, char* username){
