@@ -4,8 +4,8 @@ short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 
 // Function to load personal schedule tables for all users in a specific team
 void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int *member_count, char *team_name) {
-    DIR *users_dir, *user_dir;
-    struct dirent *user_entry;
+    DIR *team_dir, *user_dir;
+    struct dirent *entry;
     *member_count = 0;
 
     // Save the current working directory
@@ -19,32 +19,24 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
     char team_path[512];
     snprintf(team_path, sizeof(team_path), "%s%s", TEAMS_DIRECTORY, team_name);
 
+    // Open the team directory
+    if ((team_dir = opendir(team_path)) == NULL) {
+        perror("Cannot open team directory");
+        return;
+    }
+
     // Change to the team directory
     if (chdir(team_path) != 0) {
-        perror("Failed to change to specific team directory");
+        perror("Failed to change to team directory");
+        closedir(team_dir);
         return;
     }
 
-    // Open the "users" directory inside the team directory
-    if ((users_dir = opendir("users")) == NULL) {
-        perror("Cannot open users directory");
-        chdir(cwd); // Return to the original working directory
-        return;
-    }
-
-    // Change to the "users" directory
-    if (chdir("users") != 0) {
-        perror("Failed to change to users directory");
-        closedir(users_dir);
-        chdir(cwd); // Return to the original working directory
-        return;
-    }
-
-    // Iterate through each user's directory
-    while ((user_entry = readdir(users_dir)) != NULL && *member_count < MAX_CLIENTS) {
-        if (user_entry->d_type == DT_DIR && strcmp(user_entry->d_name, ".") != 0 && strcmp(user_entry->d_name, "..") != 0) {
-            // Change to the user's directory
-            if (chdir(user_entry->d_name) != 0) {
+    // Iterate through user directories
+    while ((entry = readdir(team_dir)) != NULL && *member_count < MAX_CLIENTS) {
+        if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+            // Change to the user directory
+            if (chdir(entry->d_name) != 0) {
                 perror("Failed to change to user directory");
                 continue;
             }
@@ -57,13 +49,13 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
                 continue;
             }
 
-            // Read the user's schedule table from the "table.bin" file
+            // Read data from table.bin" 
             size_t read_count = fread(&table[*member_count], sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file);
             if (read_count != TABLE_MAX_TIME * TABLE_MAX_DAY) {
                 printf("Warning: Incomplete data in table.bin for user %s. Read %zu elements.\n",
-                       user_entry->d_name, read_count);
+                       entry->d_name, read_count);
             } else {
-                printf("Loaded table.bin for user %s.\n", user_entry->d_name);
+                printf("Loaded table.bin for user %s.\n", entry->d_name);
                 (*member_count)++;
             }
 
@@ -72,10 +64,11 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
         }
     }
 
-    // Close the users directory and return to the original working directory
-    closedir(users_dir);
+    // Close the team directory and return to the original working directory
+    closedir(team_dir);
     chdir(cwd);
 }
+
 
 // Function to count the available times for the team based on individual schedules
 void count_available_time(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int member_count) {
