@@ -127,6 +127,10 @@ void *handle_client(void *thread_sock) {
 				fprintf(stderr, "User password incorrect\n");
 				res.status_code = 401;
 				strcpy(res.msg, "User password incorrect");
+			} else if (strcmp(result, "Error creating new user (reach the limit)") == 0) {
+				fprintf(stderr, "Error creating new user (reach the limit)\n");
+				res.status_code = 507;
+				strcpy(res.msg, "Error creating new user (reach the limit)");
 			} else {
 			#ifdef DEBUG
 				printf("[DEBUG] result: %s\n", result);

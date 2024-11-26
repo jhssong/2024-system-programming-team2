@@ -66,7 +66,7 @@ response connect_to_server(request_packet req) {
         refresh();
         echo();
         close(sock);
-    } else if (res.status_code == 401 || res.status_code == 202 || res.status_code == 404) {
+    } else if (res.status_code == 401 || res.status_code == 202 || res.status_code == 404 || res.status_code == 507) {
         close(sock);
         response res_msg = { .msg = res.msg };
         return res_msg;
