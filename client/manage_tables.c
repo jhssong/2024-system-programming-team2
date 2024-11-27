@@ -21,13 +21,24 @@ void initialize_screen(void) {
     init_pair(3, COLOR_BLACK, COLOR_YELLOW); // Black text - yellow background (cursor position)
 
     // define color pairs for team table
-    init_pair(11, COLOR_WHITE, COLOR_BLACK);
-    init_pair(12, COLOR_RED, COLOR_BLACK);
-    init_pair(13, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(14, COLOR_GREEN, COLOR_BLACK);
-    init_pair(15, COLOR_CYAN, COLOR_BLACK);
-    init_pair(16, COLOR_BLUE, COLOR_BLACK);
-    init_pair(17, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(10, COLOR_WHITE, COLOR_BLACK);
+    /*
+    init_pair(11, COLOR_BLACK, COLOR_WHITE);
+    init_pair(12, COLOR_RED, COLOR_WHITE);
+    init_pair(13, COLOR_YELLOW, COLOR_WHITE);
+    init_pair(14, COLOR_GREEN, COLOR_WHITE);
+    init_pair(15, COLOR_CYAN, COLOR_WHITE);
+    init_pair(16, COLOR_BLUE, COLOR_WHITE);
+    init_pair(17, COLOR_MAGENTA, COLOR_WHITE);*/
+    // Define team table's color pairs with a red-to-yellow gradient (background is WHITE)
+    //FIXME Change color palette
+    init_pair(11, COLOR_BLACK, COLOR_WHITE);  // Participation level 1 (Black text)
+    init_pair(12, 240, COLOR_WHITE);          // Participation level 2 (Dark gray)
+    init_pair(13, 88, COLOR_WHITE);           // Participation level 3 (Dark red)
+    init_pair(14, 202, COLOR_WHITE);          // Participation level 4 (Bright orange)
+    init_pair(15, 226, COLOR_WHITE);          // Participation level 5 (Bright yellow)
+    init_pair(16, 46, COLOR_WHITE);           // Participation level 6 (Bright green)
+    init_pair(17, 21, COLOR_WHITE);           // Participation level 7 (Bright blue)
 }
 
 // send user's schedule to server
