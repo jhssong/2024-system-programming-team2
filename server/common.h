@@ -41,16 +41,6 @@
 
 #define MAX_USER_SCHEDULE_FILE_PATH 120
 
-typedef struct {
-	char team_name[MAX_NAME_SIZE];
-	char username[MAX_NAME_SIZE];
-	short schedule[TABLE_MAX_TIME][TABLE_MAX_DAY];
-} Personal_Table;
-
-typedef union {
-	Personal_Table personal_table;
-} Server_response;
-
 // ----
 
 #define TABLE_MAX_TIME 26
