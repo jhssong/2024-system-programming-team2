@@ -45,19 +45,15 @@ void send_schedule_to_server(void) {
     };
 
     response update_user_table_res = connect_to_server(update_user_table_req);
-
-    if (strcmp(update_user_table_res.msg, "Success") == 0) {
-        memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+    
+    if (update_user_table_res.msg != NULL && strcmp(update_user_table_res.msg, "Success") == 0) {
+        if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
+            memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+        }
     }
 
-    //TODO check res msg and update team table array
 
-    /*
-    Server_response req_data;
-    memset(&req_data, 0, sizeof(Server_response));
-    req_data.personal_table = user_table;
-    connect_to_server(3, req_data);
-    */
+    //TODO check res msg and update team table array
 }
 
 // call send_schedule_to_server() function every 10 seconds
