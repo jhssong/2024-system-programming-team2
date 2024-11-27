@@ -96,6 +96,15 @@ void *handle_client(void *thread_sock) {
 				int member_count = 0;
 				make_team_table(user_tables, &member_count, req.req.team_info.team_name);
 				count_available_time(user_tables, member_count, res.res.team_table);
+				#ifdef DEBUG
+					printf("[DEBUG] Sending team_table:\n");
+					for(int c3_i=0; c3_i<TABLE_MAX_TIME; c3_i++){
+						for(int c3_j=0; c3_j<TABLE_MAX_DAY; c3_j++){
+							printf("%d ", res.res.team_table[c3_i][c3_j]);
+						}
+						printf("\n");
+					}
+				#endif
 			} else if (strcmp(result, "Team not found") == 0) {
 				fprintf(stderr, "Failed to check the team password");
 				res.status_code = 404;
@@ -135,6 +144,15 @@ void *handle_client(void *thread_sock) {
 				//Send user_table only when the user login is successful
 				memset(res.res.user_table, 0, sizeof(res.res.user_table));
 				load_user_table_from_file(&new_user, res.res.user_table);
+				#ifdef DEBUG
+					printf("[DEBUG] Sending user_table:\n");
+					for(int c4_i=0; c4_i<TABLE_MAX_TIME; c4_i++){
+						for(int c4_j=0; c4_j<TABLE_MAX_DAY; c4_j++){
+							printf("%d ", res.res.user_table[c4_i][c4_j]);
+						}
+						printf("\n");
+					}
+				#endif
 			} else if (strcmp(result, "User password incorrect") == 0) {
 				fprintf(stderr, "User password incorrect\n");
 				res.status_code = 401;

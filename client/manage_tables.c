@@ -46,15 +46,47 @@ void send_schedule_to_server(void) {
 
     response update_user_table_res = connect_to_server(update_user_table_req);
     
+    /*
     if (update_user_table_res.msg != NULL && strcmp(update_user_table_res.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
         }
     }
+    */
+       if (update_user_table_res.msg == NULL) {
+#ifdef DEBUG
+        printw("[ERROR] No response from server. Please check your connection.\n");
+        refresh();
+#endif
+        return;
+    }
 
+    if (strcmp(update_user_table_res.msg, "Success") == 0) {
+        if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
+            memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+#ifdef DEBUG
+            printw("[INFO] Team table successfully updated.\n");
+            refresh();
+#endif
+        } else {
+#ifdef DEBUG
+            printw("[ERROR] Team table size mismatch. Update aborted.\n");
+            refresh();
+#endif
+        }
+    } else {
+#ifdef DEBUG
+        printw("[ERROR] Unknown server response: %s\n", update_user_table_res.msg);
+        refresh();
+#endif
+    }
 
     //TODO check res msg and update team table array
 }
+
+
+
+
 
 // call send_schedule_to_server() function every 10 seconds
 void periodic_send(int signum) {
