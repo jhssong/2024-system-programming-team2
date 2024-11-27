@@ -1,6 +1,6 @@
 #include "manage_user_table.h"
 
-void load_user_table_from_file(userinfo *new_user, short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
+void load_user_table_from_file(userinfo *new_user, short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
     char file_path[MAX_USER_SCHEDULE_FILE_PATH];
     struct stat statbuf;
 
@@ -10,7 +10,7 @@ void load_user_table_from_file(userinfo *new_user, short team_table[TABLE_MAX_TI
     // Check if table.bin exists
     if (stat(file_path, &statbuf) == -1) { // If file does not exist:
         // Initialize schedule array to 0
-        memset(team_table, 0, TABLE_MAX_TIME * TABLE_MAX_DAY * sizeof(short));
+        memset(user_table, 0, TABLE_MAX_TIME * TABLE_MAX_DAY * sizeof(short));
 
         // Create and write table.bin
         FILE *file = fopen(file_path, "wb");
@@ -18,7 +18,7 @@ void load_user_table_from_file(userinfo *new_user, short team_table[TABLE_MAX_TI
             perror("Error creating table.bin");
             return;
         }
-        if (fwrite(team_table, sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file) != TABLE_MAX_TIME * TABLE_MAX_DAY) {
+        if (fwrite(user_table, sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file) != TABLE_MAX_TIME * TABLE_MAX_DAY) {
             perror("Error writing to table.bin");
             fclose(file);
             return;
@@ -34,7 +34,7 @@ void load_user_table_from_file(userinfo *new_user, short team_table[TABLE_MAX_TI
             perror("Error opening table.bin");
             return;
         }
-        if (fread(team_table, sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file) != TABLE_MAX_TIME * TABLE_MAX_DAY) {
+        if (fread(user_table, sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file) != TABLE_MAX_TIME * TABLE_MAX_DAY) {
             perror("Error reading from table.bin");
             fclose(file);
             return;

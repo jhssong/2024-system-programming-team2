@@ -91,6 +91,7 @@ void *handle_client(void *thread_sock) {
 				strcpy(res.msg, "Correct");
 
 				//Send team_table only when the team login is successful
+				memset(res.res.team_table, 0, sizeof(res.res.team_table));
 				short user_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 				int member_count = 0;
 				make_team_table(user_tables, &member_count, req.req.team_info.team_name);
@@ -132,6 +133,7 @@ void *handle_client(void *thread_sock) {
 				strcpy(res.msg, "Correct");
 
 				//Send user_table only when the user login is successful
+				memset(res.res.user_table, 0, sizeof(res.res.user_table));
 				load_user_table_from_file(&new_user, res.res.user_table);
 			} else if (strcmp(result, "User password incorrect") == 0) {
 				fprintf(stderr, "User password incorrect\n");
@@ -182,7 +184,7 @@ void *handle_client(void *thread_sock) {
 				res.status_code = 404;
 				strcpy(res.msg, result);
 			}
-
+			memset(res.res.team_table, 0, sizeof(res.res.team_table));
 			short user_tables[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY] = {0};
 			int member_count = 0;
 			make_team_table(user_tables, &member_count, req.req.user_table.team_name);
