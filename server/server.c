@@ -96,15 +96,6 @@ void *handle_client(void *thread_sock) {
 				int member_count = 0;
 				make_team_table(user_tables, &member_count, req.req.team_info.team_name);
 				count_available_time(user_tables, member_count, res.res.team_table);
-				#ifdef DEBUG
-					printf("[DEBUG] Sending team_table:\n");
-					for(int c3_i=0; c3_i<TABLE_MAX_TIME; c3_i++){
-						for(int c3_j=0; c3_j<TABLE_MAX_DAY; c3_j++){
-							printf("%d ", res.res.team_table[c3_i][c3_j]);
-						}
-						printf("\n");
-					}
-				#endif
 			} else if (strcmp(result, "Team not found") == 0) {
 				fprintf(stderr, "Failed to check the team password");
 				res.status_code = 404;
@@ -144,15 +135,6 @@ void *handle_client(void *thread_sock) {
 				//Send user_table only when the user login is successful
 				memset(res.res.user_table, 0, sizeof(res.res.user_table));
 				load_user_table_from_file(&new_user, res.res.user_table);
-				#ifdef DEBUG
-					printf("[DEBUG] Sending user_table:\n");
-					for(int c4_i=0; c4_i<TABLE_MAX_TIME; c4_i++){
-						for(int c4_j=0; c4_j<TABLE_MAX_DAY; c4_j++){
-							printf("%d ", res.res.user_table[c4_i][c4_j]);
-						}
-						printf("\n");
-					}
-				#endif
 			} else if (strcmp(result, "User password incorrect") == 0) {
 				fprintf(stderr, "User password incorrect\n");
 				res.status_code = 401;
@@ -185,13 +167,6 @@ void *handle_client(void *thread_sock) {
 			#ifdef DEBUG
 				printf("[DEBUG] received user_name: %s\n", new_user_table.user_name);
 				printf("[DEBUG] received team_name: %s\n", new_user_table.team_name);
-				printf("[DEBUG] received table:\n");
-				for(int c5_i=0; c5_i<TABLE_MAX_TIME; c5_i++){
-					for(int c5_j=0; c5_j<TABLE_MAX_DAY; c5_j++){
-						printf("%d ", new_user_table.user_table[c5_i][c5_j]);
-					}
-					printf("\n");
-				}
 			#endif
 
 			result = update_user_table_file(&new_user_table);
@@ -215,26 +190,7 @@ void *handle_client(void *thread_sock) {
 			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
                 perror("Failed to send update user table's response");
             }
-			break;
-
-
-			/*Personal_Table personal_table;
-			if((received_bytes = recv(sock, &personal_table, sizeof(Personal_Table), 0)) <= 0){
-				perror("Failed to receive personal table data");
-                close(sock);
-                client_count--;
-                return NULL;
-			}else {
-				#ifdef DEBUG
-					printf("[DEBUG] Recieved data size: %zu\n", sizeof(Personal_Table));
-				#endif
-			}
-
-			update_personal_table(&personal_table);	// at manage_personal_table.c
-
-			//TODO: make Team_Time_Table and send to client*/
-		break;	
-	
+			break;	
 	}
 
 	printf("Client disconnected.\n");
