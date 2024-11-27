@@ -19,13 +19,15 @@
 #define APP_NAME "TTT"
 #define APP_VERSION "v0.0.1"
 
-#define TERMINAL_MIN_WIDTH 50
-#define TERMINAL_MIN_HEIGHT 30	// 09:00 ~ 22:00
+#define TERMINAL_MIN_WIDTH 90
+#define TERMINAL_MIN_HEIGHT 32	// 09:00 ~ 22:00 + commands
 
 #define USER_TABLE_START_ROW 4
-#define USER_TABLE_START_COL 50
+#define USER_TABLE_START_COL 41
 #define TEAM_TABLE_START_ROW 4
 #define TEAM_TABLE_START_COL 2
+#define BEST_TIME_START_ROW 4
+#define BEST_TIME_START_COL 69
 
 #define MAX_NAME_SIZE 51
 #define MAX_PW_SIZE 9
@@ -90,16 +92,4 @@ typedef struct {
 
 void init_global_variable();
 
-
-// deprecated ---------------------------------------------- 
-/*
-typedef struct {
-	char username[MAX_NAME_SIZE];
-	short schedule[26][7];
-} Personal_Table;
-
-typedef union {
-	Personal_Table personal_table;
-} Server_response;
-*/
 #endif

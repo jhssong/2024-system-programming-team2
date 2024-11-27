@@ -1,5 +1,8 @@
 #include "manage_tables.h"
 
+static int cursor_row = 0, cursor_col = 0;
+static int show_best_times = 0;
+
 // Initialize screen for personal table
 void initialize_screen(void) {
 #ifdef DEBUG_PERSONAL
@@ -17,14 +20,16 @@ void initialize_screen(void) {
     init_pair(2, COLOR_BLACK, COLOR_WHITE);  // Black text - white background (represents 1)
     init_pair(3, COLOR_BLACK, COLOR_YELLOW); // Black text - yellow background (cursor position)
 
-    // define color pairs for team table
-    init_pair(11, COLOR_WHITE, COLOR_BLACK);
-    init_pair(12, COLOR_RED, COLOR_BLACK);
-    init_pair(13, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(14, COLOR_GREEN, COLOR_BLACK);
-    init_pair(15, COLOR_CYAN, COLOR_BLACK);
-    init_pair(16, COLOR_BLUE, COLOR_BLACK);
-    init_pair(17, COLOR_MAGENTA, COLOR_BLACK);
+    // Define team table's color pairs
+    init_pair(10, COLOR_WHITE, COLOR_BLACK);
+    init_pair(11, 17, COLOR_WHITE);  // Participation level 1 (Dark blue)
+    init_pair(12, 19, COLOR_WHITE);  // Participation level 2 (Deep blue)
+    init_pair(13, 24, COLOR_WHITE);  // Participation level 3 (Teal)
+    init_pair(14, 34, COLOR_WHITE);  // Participation level 4 (Bright green)
+    init_pair(15, 40, COLOR_WHITE);  // Participation level 5 (Yellow-green)
+    init_pair(16, 202, COLOR_WHITE); // Participation level 6 (Reddish-orange)
+    init_pair(17, 208, COLOR_WHITE); // Participation level 7 (Bright orange)
+    init_pair(18, 196, COLOR_WHITE); // Participation level 8 (Bright red)
 }
 
 // send user's schedule to server
@@ -55,41 +60,30 @@ void send_schedule_to_server(void) {
     }
     */
 
-    /// FIXME the comparison will always evaluate as ‘false’ for the address of ‘msg’ will never be NULL
-//        if (update_user_table_response_packet.msg == NULL) {  
-// #ifdef DEBUG
-//         printw("[ERROR] No response from server. Please check your connection.\n");
-//         refresh();
-// #endif
-//         return;
-//     }
-
     if (strcmp(update_user_table_response_packet.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
-#ifdef DEBUG
-            printw("[INFO] Team table successfully updated.\n");
-            refresh();
-#endif
+            
+            #ifdef DEBUG
+                printw("[DEBUG] Tables successfully updated.\n");
+                refresh();
+            #endif
         } else {
-#ifdef DEBUG
-            printw("[ERROR] Team table size mismatch. Update aborted.\n");
-            refresh();
-#endif
+            #ifdef DEBUG
+                printw("[DEBUG] Error: Team table size mismatch. Update aborted.\n");
+                refresh();
+            #endif
         }
     } else {
-#ifdef DEBUG
-        printw("[ERROR] Unknown server response: %s\n", update_user_table_response_packet.msg);
-        refresh();
-#endif
+        #ifdef DEBUG
+            printw("[DEBUG] Error: Unknown server response: %s\n", update_user_table_response_packet.msg);
+            refresh();
+        #endif
     }
-
-    //TODO check res msg and update team table array
+    #ifndef DEBUG   //Don't redraw table when in debug mode: need to check debug message
+        draw_table();
+    #endif
 }
-
-
-
-
 
 // call send_schedule_to_server() function every 10 seconds
 void periodic_send(int signum) {
@@ -99,13 +93,15 @@ void periodic_send(int signum) {
 
 // processing inputs from user
 void process_input(void) {
-    int cursor_row = 0, cursor_col = 0;
 
-    draw_table(cursor_row, cursor_col);
+    draw_table();
 
     int ch;
-    while ((ch = getch()) != 'q') {  // end program when pressing 'q'(temporary)
+    while ((ch = getch()) != 'q') {  // end program when pressing 'q'
         switch (ch) {
+            case 'd':
+                show_best_times = !show_best_times;
+                break;
             case KEY_UP:
                 if (cursor_row > 0) cursor_row--;
                 break;
@@ -120,18 +116,30 @@ void process_input(void) {
                 break;
             case '\n': 
             case ' ':
-                update_cell(cursor_row, cursor_col);
+                update_cell();
                 break;
         }
 
-        draw_table(cursor_row, cursor_col);
+        draw_table();
     }
 }
 
-void draw_table(int cursor_row, int cursor_col) {
+void draw_table(void) {
     clear();
+    display_title_bar();
+    display_navigation_options_bar();
     print_team_table();
+    if(show_best_times)
+        print_best_times();
+
+    //draw user table
+    mvprintw(USER_TABLE_START_ROW - 2, USER_TABLE_START_COL + 9, "User Table");
+    mvprintw(USER_TABLE_START_ROW - 1, USER_TABLE_START_COL, "Sun Mon Tue Wed Thu Fri Sat");
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
+        int hour = 9 + (i / 2);          
+        char half = (i % 2 == 0) ? 'A' : 'B'; 
+        mvprintw(USER_TABLE_START_ROW + i, USER_TABLE_START_COL - 5, "%02d%c", hour, half);
+
         for (int j = 0; j < TABLE_MAX_DAY; j++) {
             if (i == cursor_row && j == cursor_col) {
                 attron(COLOR_PAIR(3));  // cursor position: Black text - yellow background
@@ -149,10 +157,13 @@ void draw_table(int cursor_row, int cursor_col) {
             attroff(COLOR_PAIR(3));
         }
     }
+    #ifdef DEBUG
+        mvprintw(USER_TABLE_START_ROW, 69, ". <-HERE!");
+    #endif
     refresh();
 }
 
-void update_cell(int cursor_row, int cursor_col) {
+void update_cell(void) {
     user_table[cursor_row][cursor_col] = !user_table[cursor_row][cursor_col];
 }
 
@@ -160,27 +171,12 @@ void table_main(){
     initialize_screen();
 
     signal(SIGALRM, periodic_send);
+
+    
     alarm(10);
 
     process_input();
 
+    alarm(0);   //stop alarm
     send_schedule_to_server();  //send changes before shutting down program
 }
-
-#ifdef DEBUG_PERSONAL
-int main() {
-    initialize_screen();
-
-    load_schedule(schedule);
-
-    signal(SIGALRM, periodic_save);
-    alarm(10);
-
-    process_input(schedule);
-    endwin();
-
-    save_schedule(schedule);
-
-    return 0;
-}
-#endif
