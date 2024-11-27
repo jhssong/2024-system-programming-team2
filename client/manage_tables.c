@@ -1,6 +1,7 @@
 #include "manage_tables.h"
 
 static int cursor_row = 0, cursor_col = 0;
+static int show_best_times = 0;
 
 // Initialize screen for personal table
 void initialize_screen(void) {
@@ -62,26 +63,24 @@ void send_schedule_to_server(void) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
             
             #ifdef DEBUG
-                mvprintw(window_height-1, 0, "[DEBUG] Tables successfully updated.\n");
+                printw("[DEBUG] Tables successfully updated.\n");
                 refresh();
             #endif
         } else {
             #ifdef DEBUG
-                mvprintw(window_height-1, 0, "[DEBUG] Error: Team table size mismatch. Update aborted.\n");
+                printw("[DEBUG] Error: Team table size mismatch. Update aborted.\n");
                 refresh();
             #endif
         }
     } else {
         #ifdef DEBUG
-            mvprintw(window_height-1, 0, "[DEBUG] Error: Unknown server response: %s\n", update_user_table_response_packet.msg);
+            printw("[DEBUG] Error: Unknown server response: %s\n", update_user_table_response_packet.msg);
             refresh();
         #endif
     }
     #ifndef DEBUG   //Don't redraw table when in debug mode: need to check debug message
         draw_table();
     #endif
-
-    //TODO check res msg and update team table array
 }
 
 // call send_schedule_to_server() function every 10 seconds
@@ -90,14 +89,21 @@ void periodic_send(int signum) {
     alarm(10);
 }
 
+void print_best_times(void){
+    //TODO Add checking best times from team table and print it
+}
+
 // processing inputs from user
 void process_input(void) {
 
     draw_table();
 
     int ch;
-    while ((ch = getch()) != 'q') {  // end program when pressing 'q'(temporary)
+    while ((ch = getch()) != 'q') {  // end program when pressing 'q'
         switch (ch) {
+            case 'd':
+                show_best_times = !show_best_times;
+                break;
             case KEY_UP:
                 if (cursor_row > 0) cursor_row--;
                 break;
@@ -124,6 +130,8 @@ void draw_table(void) {
     clear();
     display_title_bar();
     print_team_table();
+    if(show_best_times)
+        print_best_times();
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
         int hour = 9 + (i / 2);          
         char half = (i % 2 == 0) ? 'A' : 'B'; 
