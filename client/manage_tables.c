@@ -1,5 +1,7 @@
 #include "manage_tables.h"
 
+static int cursor_row = 0, cursor_col = 0;
+
 // Initialize screen for personal table
 void initialize_screen(void) {
 #ifdef DEBUG_PERSONAL
@@ -58,22 +60,26 @@ void send_schedule_to_server(void) {
     if (strcmp(update_user_table_response_packet.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
-#ifdef DEBUG
-            printw("[INFO] Team table successfully updated.\n");
-            refresh();
-#endif
+            
+            #ifdef DEBUG
+                mvprintw(window_height-1, 0, "[DEBUG] Tables successfully updated.\n");
+                refresh();
+            #endif
         } else {
-#ifdef DEBUG
-            printw("[ERROR] Team table size mismatch. Update aborted.\n");
-            refresh();
-#endif
+            #ifdef DEBUG
+                mvprintw(window_height-1, 0, "[DEBUG] Error: Team table size mismatch. Update aborted.\n");
+                refresh();
+            #endif
         }
     } else {
-#ifdef DEBUG
-        printw("[ERROR] Unknown server response: %s\n", update_user_table_response_packet.msg);
-        refresh();
-#endif
+        #ifdef DEBUG
+            mvprintw(window_height-1, 0, "[DEBUG] Error: Unknown server response: %s\n", update_user_table_response_packet.msg);
+            refresh();
+        #endif
     }
+    #ifndef DEBUG   //Don't redraw table when in debug mode: need to check debug message
+        draw_table();
+    #endif
 
     //TODO check res msg and update team table array
 }
@@ -86,9 +92,8 @@ void periodic_send(int signum) {
 
 // processing inputs from user
 void process_input(void) {
-    int cursor_row = 0, cursor_col = 0;
 
-    draw_table(cursor_row, cursor_col);
+    draw_table();
 
     int ch;
     while ((ch = getch()) != 'q') {  // end program when pressing 'q'(temporary)
@@ -107,23 +112,23 @@ void process_input(void) {
                 break;
             case '\n': 
             case ' ':
-                update_cell(cursor_row, cursor_col);
+                update_cell();
                 break;
         }
 
-        draw_table(cursor_row, cursor_col);
+        draw_table();
     }
 }
 
-void draw_table(int cursor_row, int cursor_col) {
+void draw_table(void) {
     clear();
     display_title_bar();
     print_team_table();
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
         int hour = 9 + (i / 2);          
         char half = (i % 2 == 0) ? 'A' : 'B'; 
-        mvprintw(USER_TABLE_START_ROW + i, USER_TABLE_START_COL - 4, "%02d%c", hour, half);
-        
+        mvprintw(USER_TABLE_START_ROW + i, USER_TABLE_START_COL - 5, "%02d%c", hour, half);
+
         for (int j = 0; j < TABLE_MAX_DAY; j++) {
             if (i == cursor_row && j == cursor_col) {
                 attron(COLOR_PAIR(3));  // cursor position: Black text - yellow background
@@ -144,7 +149,7 @@ void draw_table(int cursor_row, int cursor_col) {
     refresh();
 }
 
-void update_cell(int cursor_row, int cursor_col) {
+void update_cell(void) {
     user_table[cursor_row][cursor_col] = !user_table[cursor_row][cursor_col];
 }
 
