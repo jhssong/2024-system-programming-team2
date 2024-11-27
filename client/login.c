@@ -45,15 +45,20 @@ void login() {
 
 #ifdef DEBUG
 	printw("[DEBUG] Requesting login to the team.\n");
+	printw("[TEST] Test name: %s\n", team_info.team_name);
 	printw("[DEBUG]     cmd:  %d\n", team_login_req.cmd);
 	printw("[DEBUG]     name: %s\n", team_login_req.req.team_info.team_name);
 	printw("[DEBUG]     pw:   %s\n", team_login_req.req.team_info.team_pw);
 	refresh();
 #endif
 
-	response team_login_res = connect_to_server(team_login_req);
+	response_packet team_login_response_packet = connect_to_server(team_login_req);
+	response team_login_res = team_login_response_packet.data;
+	printw("hello?\n");
+	refresh();
+	getchar();
 
-	while (strcmp(team_login_res.msg, "Correct") != 0) {
+	while (strcmp(team_login_response_packet.msg, "Correct") != 0) {
 		clear();
 		// Password incorrect ask again
 		addstr("Wrong password! Enter the team password again");
@@ -90,7 +95,8 @@ void login() {
 		refresh();
 	#endif
 
-		team_login_res = connect_to_server(team_login_req);
+		response_packet team_login_response_packet = connect_to_server(team_login_req);
+		team_login_res = team_login_response_packet.data;
 	}	
 	memcpy(team_table, team_login_res.team_table, sizeof(team_table));
 	strncpy(team_info.team_pw, team_pw, sizeof(team_pw));
@@ -154,15 +160,17 @@ void login() {
 	refresh();
 #endif
 
-	response user_login_res = connect_to_server(user_login_req);
-	if (strcmp(user_login_res.msg, "Error creating new user (reach the limit)") == 0) {
+	response_packet user_login_response_packet = connect_to_server(user_login_req);
+	response user_login_res = user_login_response_packet.data;
+
+	if (strcmp(user_login_response_packet.msg, "Error creating new user (reach the limit)") == 0) {
 		printw("Error creating new user (reach the limit). Press any key to go back to menu\n");
 		refresh();
 		getchar();
 		return;
 	}
 
-	while (strcmp(user_login_res.msg, "Correct") != 0) {
+	while (strcmp(user_login_response_packet.msg, "Correct") != 0) {
 		clear();
 		// Password incorrect ask again
 		addstr("Wrong password! Enter the user password again");
@@ -200,7 +208,8 @@ void login() {
 		refresh();
 	#endif
 
-		user_login_res = connect_to_server(user_login_req);
+		response_packet user_login_response_packet = connect_to_server(user_login_req);
+		user_login_res = user_login_response_packet.data;
 	}
 
 	user_info = new_user;

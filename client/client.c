@@ -1,6 +1,6 @@
 #include "client.h"
 
-response connect_to_server(request_packet req) {
+response_packet connect_to_server(request_packet req) {
     int sock;
     int received_bytes;
     struct sockaddr_in serv_addr;
@@ -22,8 +22,7 @@ response connect_to_server(request_packet req) {
         perror("Connection failed");
         echo();
         close(sock);
-        // exit(EXIT_FAILURE);
-        return res.res;
+        return res;
     }
     
     received_bytes = recv(sock, &res, sizeof(response_packet), 0);
@@ -66,16 +65,13 @@ response connect_to_server(request_packet req) {
         refresh();
         echo();
         close(sock);
-    } else if (res.status_code == 401 || res.status_code == 202 || res.status_code == 404 || res.status_code == 507) {
-        close(sock);
-        response res_msg = { .msg = res.msg };
-        return res_msg;
     } else {
         close(sock);
     #ifdef DEBUG
         printw("\n[DEBUG] status %d with: %s\n", res.status_code, res.msg);
         refresh();
     #endif
+        return res;
     }
-    return res.res;
+    return res;
 }
