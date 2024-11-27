@@ -5,6 +5,6 @@
 #include "util.h"
 #include "client.h"
 
-void display_create_new_team();
+int display_create_new_team();
 
 #endif

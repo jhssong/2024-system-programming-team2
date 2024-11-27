@@ -4,10 +4,21 @@
 #include "greeting_menu.h"
 #include "create_new_team.h"
 #include "select_existing_team.h"
-#include "personal_time_table.h"
 #include "login.h"
 
+void handle_quit(int signum) {
+	clear();
+	move(window_height - 1, 0);
+	addstr("Press any key to exit...");
+	refresh();
+	getchar();									// TODO Only for debug remove before publish
+	endwin();									// Turn off curses
+	exit(0);
+}
+
 int main() {
+	signal(SIGINT, handle_quit);
+	signal(SIGQUIT, handle_quit);
 	init_global_variable();
 	get_window_size();  									// Get window size and save it in constant.c
 	initscr();  											// Turns on curses
@@ -36,7 +47,14 @@ int main() {
 				login();
 				break;
 			case 1: 										// Create new team
-				display_create_new_team();
+				int create_res = display_create_new_team();
+				if (create_res == 1) {
+					printw("\nCannot create more team (reach the limit). Press any key to go back to menu.\n");
+					refresh();
+					getchar();
+					refresh();
+					break;
+				}
 				login();
 				break;
 			case 2: 										// About
