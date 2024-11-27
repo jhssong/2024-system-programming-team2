@@ -15,7 +15,7 @@ TARGET = app
 DEBUG_TARGET = app_debug
 
 # Source files
-SRC = main.c common.c util.c menu_selector.c greeting_menu.c create_new_team.c client.c select_existing_team.c login.c
+SRC = main.c common.c util.c menu_selector.c greeting_menu.c create_new_team.c client.c select_existing_team.c login.c manage_tables.c team_table.c
 
 # Build
 all: $(TARGET)

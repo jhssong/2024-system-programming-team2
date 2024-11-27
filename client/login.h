@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "client.h"
+#include "manage_tables.h"
 
 void login();
 

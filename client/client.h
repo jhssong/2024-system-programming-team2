@@ -4,7 +4,6 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include "common.h"
-#include "personal_time_table.h"
 
 #define SERVER_ADDRESS "127.0.0.1"
 #define PORT 8080
