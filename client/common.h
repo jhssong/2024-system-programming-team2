@@ -86,7 +86,7 @@ typedef union {
 typedef struct {
 	int status_code;
 	char msg[51];
-	response res;
+	response data;
 } response_packet;
 
 void init_global_variable();
