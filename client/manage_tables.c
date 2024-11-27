@@ -166,21 +166,3 @@ void table_main(){
 
     send_schedule_to_server();  //send changes before shutting down program
 }
-
-#ifdef DEBUG_PERSONAL
-int main() {
-    initialize_screen();
-
-    load_schedule(schedule);
-
-    signal(SIGALRM, periodic_save);
-    alarm(10);
-
-    process_input(schedule);
-    endwin();
-
-    save_schedule(schedule);
-
-    return 0;
-}
-#endif
