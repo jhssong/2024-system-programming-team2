@@ -55,15 +55,6 @@ void send_schedule_to_server(void) {
     }
     */
 
-    /// FIXME the comparison will always evaluate as ‘false’ for the address of ‘msg’ will never be NULL
-//        if (update_user_table_response_packet.msg == NULL) {  
-// #ifdef DEBUG
-//         printw("[ERROR] No response from server. Please check your connection.\n");
-//         refresh();
-// #endif
-//         return;
-//     }
-
     if (strcmp(update_user_table_response_packet.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));

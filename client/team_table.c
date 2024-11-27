@@ -48,14 +48,4 @@ void print_team_table(void) {
             attroff(COLOR_PAIR(color_pair));
         }
     }
-
-    //refresh(); //TODO Modify to avoid overlap with actions in the user_table
-    /*
-    // Wait for user input to exit
-    while (1) {
-        char ch = getch();
-        if (ch == 'q') {
-            break;
-        }
-    }*/
 }

@@ -90,16 +90,4 @@ typedef struct {
 
 void init_global_variable();
 
-
-// deprecated ---------------------------------------------- 
-/*
-typedef struct {
-	char username[MAX_NAME_SIZE];
-	short schedule[26][7];
-} Personal_Table;
-
-typedef union {
-	Personal_Table personal_table;
-} Server_response;
-*/
 #endif
