@@ -54,9 +54,6 @@ void login() {
 
 	response_packet team_login_response_packet = connect_to_server(team_login_req);
 	response team_login_res = team_login_response_packet.data;
-	printw("hello?\n");
-	refresh();
-	getchar();
 
 	while (strcmp(team_login_response_packet.msg, "Correct") != 0) {
 		clear();
@@ -93,9 +90,10 @@ void login() {
 		printw("[DEBUG]     name: %s\n", team_login_req.req.team_info.team_name);
 		printw("[DEBUG]     pw:   %s\n", team_login_req.req.team_info.team_pw);
 		refresh();
+		getch();
 	#endif
 
-		response_packet team_login_response_packet = connect_to_server(team_login_req);
+		team_login_response_packet = connect_to_server(team_login_req);
 		team_login_res = team_login_response_packet.data;
 	}	
 	memcpy(team_table, team_login_res.team_table, sizeof(team_table));
@@ -163,6 +161,11 @@ void login() {
 	response_packet user_login_response_packet = connect_to_server(user_login_req);
 	response user_login_res = user_login_response_packet.data;
 
+#ifdef DEBUG
+	printw("[TEST] return msg: %s\n", user_login_response_packet.msg);
+	refresh();
+#endif
+
 	if (strcmp(user_login_response_packet.msg, "Error creating new user (reach the limit)") == 0) {
 		printw("Error creating new user (reach the limit). Press any key to go back to menu\n");
 		refresh();
@@ -208,7 +211,7 @@ void login() {
 		refresh();
 	#endif
 
-		response_packet user_login_response_packet = connect_to_server(user_login_req);
+		user_login_response_packet = connect_to_server(user_login_req);
 		user_login_res = user_login_response_packet.data;
 	}
 
