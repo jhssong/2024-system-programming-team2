@@ -155,6 +155,12 @@ void login() {
 #endif
 
 	response user_login_res = connect_to_server(user_login_req);
+	if (strcmp(user_login_res.msg, "Error creating new user (reach the limit)") == 0) {
+		printw("Error creating new user (reach the limit). Press any key to go back to menu\n");
+		refresh();
+		getchar();
+		return;
+	}
 
 	while (strcmp(user_login_res.msg, "Correct") != 0) {
 		clear();
