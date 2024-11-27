@@ -20,25 +20,16 @@ void initialize_screen(void) {
     init_pair(2, COLOR_BLACK, COLOR_WHITE);  // Black text - white background (represents 1)
     init_pair(3, COLOR_BLACK, COLOR_YELLOW); // Black text - yellow background (cursor position)
 
-    // define color pairs for team table
+    // Define team table's color pairs
     init_pair(10, COLOR_WHITE, COLOR_BLACK);
-    /*
-    init_pair(11, COLOR_BLACK, COLOR_WHITE);
-    init_pair(12, COLOR_RED, COLOR_WHITE);
-    init_pair(13, COLOR_YELLOW, COLOR_WHITE);
-    init_pair(14, COLOR_GREEN, COLOR_WHITE);
-    init_pair(15, COLOR_CYAN, COLOR_WHITE);
-    init_pair(16, COLOR_BLUE, COLOR_WHITE);
-    init_pair(17, COLOR_MAGENTA, COLOR_WHITE);*/
-    // Define team table's color pairs with a red-to-yellow gradient (background is WHITE)
-    //FIXME Change color palette
-    init_pair(11, COLOR_BLACK, COLOR_WHITE);  // Participation level 1 (Black text)
-    init_pair(12, 240, COLOR_WHITE);          // Participation level 2 (Dark gray)
-    init_pair(13, 88, COLOR_WHITE);           // Participation level 3 (Dark red)
-    init_pair(14, 202, COLOR_WHITE);          // Participation level 4 (Bright orange)
-    init_pair(15, 226, COLOR_WHITE);          // Participation level 5 (Bright yellow)
-    init_pair(16, 46, COLOR_WHITE);           // Participation level 6 (Bright green)
-    init_pair(17, 21, COLOR_WHITE);           // Participation level 7 (Bright blue)
+    init_pair(11, 17, COLOR_WHITE);  // Participation level 1 (Dark blue)
+    init_pair(12, 19, COLOR_WHITE);  // Participation level 2 (Deep blue)
+    init_pair(13, 24, COLOR_WHITE);  // Participation level 3 (Teal)
+    init_pair(14, 34, COLOR_WHITE);  // Participation level 4 (Bright green)
+    init_pair(15, 40, COLOR_WHITE);  // Participation level 5 (Yellow-green)
+    init_pair(16, 202, COLOR_WHITE); // Participation level 6 (Reddish-orange)
+    init_pair(17, 208, COLOR_WHITE); // Participation level 7 (Bright orange)
+    init_pair(18, 196, COLOR_WHITE); // Participation level 8 (Bright red)
 }
 
 // send user's schedule to server
@@ -100,10 +91,6 @@ void periodic_send(int signum) {
     alarm(10);
 }
 
-void print_best_times(void){
-    //TODO Add checking best times from team table and print it
-}
-
 // processing inputs from user
 void process_input(void) {
 
@@ -140,9 +127,14 @@ void process_input(void) {
 void draw_table(void) {
     clear();
     display_title_bar();
+    display_navigation_options_bar();
     print_team_table();
     if(show_best_times)
         print_best_times();
+
+    //draw user table
+    mvprintw(USER_TABLE_START_ROW - 2, USER_TABLE_START_COL + 9, "User Table");
+    mvprintw(USER_TABLE_START_ROW - 1, USER_TABLE_START_COL, "Sun Mon Tue Wed Thu Fri Sat");
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
         int hour = 9 + (i / 2);          
         char half = (i % 2 == 0) ? 'A' : 'B'; 
@@ -165,6 +157,9 @@ void draw_table(void) {
             attroff(COLOR_PAIR(3));
         }
     }
+    #ifdef DEBUG
+        mvprintw(USER_TABLE_START_ROW, 69, ". <-HERE!");
+    #endif
     refresh();
 }
 
