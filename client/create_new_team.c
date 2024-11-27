@@ -4,22 +4,42 @@ const char* CREATE_NEW_TEAM_TITLE = "Create New Team";
 const char* TEAM_NAME_QUESTION = "What is the team name? (max 50 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
 
-void display_create_new_team() {
+int display_create_new_team() {
 	clear();
 	display_title_bar();
 	show_title(CREATE_NEW_TEAM_TITLE);
-
-	addstr(TEAM_NAME_QUESTION);						// Ask team name
-	printw("\n: ");
-
-	cbreak();
-    echo();
-	refresh();
 	
 	char team_name[MAX_NAME_SIZE];
-	getstr(team_name);
+	int is_ask_team_name_again = 0;
+	while (1) {
+		int check_name = 1;
+		if (is_ask_team_name_again) addstr("Already existing team name. Type another name");
+		else addstr(TEAM_NAME_QUESTION);						// Ask team name
+		printw("\n: ");
 
-													// TODO Add valid check (Duplictate check)
+		cbreak();
+		echo();
+		refresh();
+		
+		getstr(team_name);
+
+		request_packet check_team_count_packet;
+		check_team_count_packet.cmd = 0;
+		response check_team_count_res = connect_to_server(check_team_count_packet);
+
+		if (check_team_count_res.team_list.size > 7) {
+			return 1;
+		}
+
+		const char* existing_team_list[MAX_TEAM_COUNT + 1];
+		for (int i = 0; i < check_team_count_res.team_list.size; i++) {
+			existing_team_list[i] = check_team_count_res.team_list.team_list[i];
+			if (strcmp(check_team_count_res.team_list.team_list[i], team_name) == 0)
+				check_name = 0;
+		}
+		if (check_name) break;
+		else is_ask_team_name_again = 1;
+	}
 	
 	addstr(TEAM_PW_QUESTION);						// Ask team password
 	printw("\n: ");
@@ -67,4 +87,6 @@ void display_create_new_team() {
 
 	connect_to_server(req);
 	team_info = new_team;
+
+	return 0;
 }

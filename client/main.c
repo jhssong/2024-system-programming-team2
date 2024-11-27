@@ -47,7 +47,14 @@ int main() {
 				login();
 				break;
 			case 1: 										// Create new team
-				display_create_new_team();
+				int create_res = display_create_new_team();
+				if (create_res == 1) {
+					printw("\nCannot create more team (reach the limit). Press any key to go back to menu.\n");
+					refresh();
+					getchar();
+					refresh();
+					break;
+				}
 				login();
 				break;
 			case 2: 										// About
