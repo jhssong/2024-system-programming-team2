@@ -22,8 +22,10 @@
 #define TERMINAL_MIN_WIDTH 50
 #define TERMINAL_MIN_HEIGHT 30	// 09:00 ~ 22:00
 
-#define PERSONAL_TABLE_START_ROW 4	// TODO remove
-#define PERSONAL_TABLE_START_COL 19	// TODO remove
+#define USER_TABLE_START_ROW 4
+#define USER_TABLE_START_COL 50
+#define TEAM_TABLE_START_ROW 4
+#define TEAM_TABLE_START_COL 2
 
 #define MAX_NAME_SIZE 51
 #define MAX_PW_SIZE 9
@@ -72,6 +74,7 @@ extern userinfo user_info;
 extern teaminfo team_info;
 extern teamlist team_list;
 extern short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
+extern short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
 
 typedef union {
 	short user_table[TABLE_MAX_TIME][TABLE_MAX_DAY];
@@ -90,7 +93,7 @@ void init_global_variable();
 
 
 // deprecated ---------------------------------------------- 
-
+/*
 typedef struct {
 	char username[MAX_NAME_SIZE];
 	short schedule[26][7];
@@ -99,5 +102,5 @@ typedef struct {
 typedef union {
 	Personal_Table personal_table;
 } Server_response;
-
+*/
 #endif

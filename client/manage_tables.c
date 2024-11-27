@@ -1,6 +1,4 @@
-#include "personal_time_table.h"
-
-Personal_Table user_table;
+#include "manage_tables.h"
 
 // Initialize screen for personal table
 void initialize_screen(void) {
@@ -14,34 +12,81 @@ void initialize_screen(void) {
 
 
     start_color();  // Initialize color mode
-    //Define color pairs
+    //Define color pairs for user table
     init_pair(1, COLOR_WHITE, COLOR_BLACK);  // White text - black background (represents 0)
     init_pair(2, COLOR_BLACK, COLOR_WHITE);  // Black text - white background (represents 1)
     init_pair(3, COLOR_BLACK, COLOR_YELLOW); // Black text - yellow background (cursor position)
-}
-void load_user_table(Personal_Table loaded_user_table){
-    user_table=loaded_user_table;
-}
 
-// load user's schedule from server
-void load_schedule(char* team_name, char* username) {
-    Personal_Table teamname_and_username;
-    strncpy(teamname_and_username.username, username, sizeof(teamname_and_username.username));
-	strncpy(teamname_and_username.team_name, team_name, sizeof(teamname_and_username.team_name));
-
-	Server_response req_data;
-	memset(&req_data, 0, sizeof(Server_response));
-	req_data.personal_table = teamname_and_username;
-    connect_to_server(2, req_data);
+    // define color pairs for team table
+    init_pair(11, COLOR_WHITE, COLOR_BLACK);
+    init_pair(12, COLOR_RED, COLOR_BLACK);
+    init_pair(13, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(14, COLOR_GREEN, COLOR_BLACK);
+    init_pair(15, COLOR_CYAN, COLOR_BLACK);
+    init_pair(16, COLOR_BLUE, COLOR_BLACK);
+    init_pair(17, COLOR_MAGENTA, COLOR_BLACK);
 }
 
 // send user's schedule to server
 void send_schedule_to_server(void) {
-    Server_response req_data;
-    memset(&req_data, 0, sizeof(Server_response));
-    req_data.personal_table = user_table;
-    connect_to_server(3, req_data);
+    update_user_table new_user_table;
+    memset(new_user_table.user_table, 0, sizeof(new_user_table.user_table));
+
+    strncpy(new_user_table.user_name, user_info.user_name, sizeof(new_user_table.user_name));
+    strncpy(new_user_table.team_name, team_info.team_name, sizeof(new_user_table.team_name));
+    memcpy(new_user_table.user_table, user_table, sizeof(new_user_table.user_table));
+
+    request update_user_table_req_data;
+    memset(&update_user_table_req_data, 0, sizeof(update_user_table));
+    update_user_table_req_data.user_table = new_user_table;
+
+    request_packet update_user_table_req={
+        5, update_user_table_req_data
+    };
+
+    response update_user_table_res = connect_to_server(update_user_table_req);
+    
+    /*
+    if (update_user_table_res.msg != NULL && strcmp(update_user_table_res.msg, "Success") == 0) {
+        if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
+            memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+        }
+    }
+    */
+       if (update_user_table_res.msg == NULL) {
+#ifdef DEBUG
+        printw("[ERROR] No response from server. Please check your connection.\n");
+        refresh();
+#endif
+        return;
+    }
+
+    if (strcmp(update_user_table_res.msg, "Success") == 0) {
+        if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
+            memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
+#ifdef DEBUG
+            printw("[INFO] Team table successfully updated.\n");
+            refresh();
+#endif
+        } else {
+#ifdef DEBUG
+            printw("[ERROR] Team table size mismatch. Update aborted.\n");
+            refresh();
+#endif
+        }
+    } else {
+#ifdef DEBUG
+        printw("[ERROR] Unknown server response: %s\n", update_user_table_res.msg);
+        refresh();
+#endif
+    }
+
+    //TODO check res msg and update team table array
 }
+
+
+
+
 
 // call send_schedule_to_server() function every 10 seconds
 void periodic_send(int signum) {
@@ -82,19 +127,19 @@ void process_input(void) {
 
 void draw_table(int cursor_row, int cursor_col) {
     clear();
-
+    print_team_table();
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
         for (int j = 0; j < TABLE_MAX_DAY; j++) {
             if (i == cursor_row && j == cursor_col) {
                 attron(COLOR_PAIR(3));  // cursor position: Black text - yellow background
-            } else if (user_table.schedule[i][j] == 1) {
+            } else if (user_table[i][j] == 1) {
                 attron(COLOR_PAIR(2));  // 1: Black text - white background
             } else {
                 attron(COLOR_PAIR(1));  // 0: White text - black background
             }
             
-            // draw from (PERSONAL_TABLE_START_ROW, PERSONAL_TABLE_START_COL)
-            mvprintw(PERSONAL_TABLE_START_ROW + i, PERSONAL_TABLE_START_COL + j * 4, " %c ", user_table.schedule[i][j] ? 'O' : 'X');
+            // draw from (USER_TABLE_START_ROW, USER_TABLE_START_COL)
+            mvprintw(USER_TABLE_START_ROW + i, USER_TABLE_START_COL + j * 4, " %c ", user_table[i][j] ? 'O' : 'X');
             
             attroff(COLOR_PAIR(1));
             attroff(COLOR_PAIR(2));
@@ -105,12 +150,11 @@ void draw_table(int cursor_row, int cursor_col) {
 }
 
 void update_cell(int cursor_row, int cursor_col) {
-    user_table.schedule[cursor_row][cursor_col] = !user_table.schedule[cursor_row][cursor_col];
+    user_table[cursor_row][cursor_col] = !user_table[cursor_row][cursor_col];
 }
 
-void personal_main(char* team_name, char* username){
+void table_main(){
     initialize_screen();
-    load_schedule(team_name, username);
 
     signal(SIGALRM, periodic_send);
     alarm(10);
