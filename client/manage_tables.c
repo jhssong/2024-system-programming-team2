@@ -78,10 +78,6 @@ void send_schedule_to_server(void) {
     //TODO check res msg and update team table array
 }
 
-
-
-
-
 // call send_schedule_to_server() function every 10 seconds
 void periodic_send(int signum) {
     send_schedule_to_server();
@@ -121,8 +117,13 @@ void process_input(void) {
 
 void draw_table(int cursor_row, int cursor_col) {
     clear();
+    display_title_bar();
     print_team_table();
     for (int i = 0; i < TABLE_MAX_TIME; i++) {
+        int hour = 9 + (i / 2);          
+        char half = (i % 2 == 0) ? 'A' : 'B'; 
+        mvprintw(USER_TABLE_START_ROW + i, USER_TABLE_START_COL - 4, "%02d%c", hour, half);
+        
         for (int j = 0; j < TABLE_MAX_DAY; j++) {
             if (i == cursor_row && j == cursor_col) {
                 attron(COLOR_PAIR(3));  // cursor position: Black text - yellow background
@@ -151,9 +152,12 @@ void table_main(){
     initialize_screen();
 
     signal(SIGALRM, periodic_send);
+
+    
     alarm(10);
 
     process_input();
 
+    alarm(0);   //stop alarm
     send_schedule_to_server();  //send changes before shutting down program
 }
