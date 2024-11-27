@@ -40,6 +40,13 @@ void display_title_bar() {
 	refresh();
 }
 
+void display_navigation_options_bar(void) {
+	for(int i = 0; i < window_width; i++)
+		mvprintw(window_height-2, i, "-");
+	mvprintw(window_height-1, 0, "Usage - Arrows: Move, Enter/Space: Toggle, Q:Return to menu, D:Display best meeting times");
+	refresh();
+}
+
 void show_title(const char* title) {
 	move(TITLE_START_LINE, 0);
 	for(int i = 0; i < strlen(title) + 4; i++)
