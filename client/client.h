@@ -9,6 +9,6 @@
 #define PORT 8080
 #define BUFFER_SIZE 100
 
-request_packet connect_to_server(request_packet req);
+response_packet connect_to_server(request_packet req);
 
 #endif

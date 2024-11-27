@@ -25,15 +25,15 @@ int display_create_new_team() {
 
 		request_packet check_team_count_packet;
 		check_team_count_packet.cmd = 0;
-		response check_team_count_res = connect_to_server(check_team_count_packet);
+		
+		response_packet check_team_count_response_packet = connect_to_server(check_team_count_packet);
+		response check_team_count_res = check_team_count_response_packet.data;
 
 		if (check_team_count_res.team_list.size > 7) {
 			return 1;
 		}
 
-		const char* existing_team_list[MAX_TEAM_COUNT + 1];
 		for (int i = 0; i < check_team_count_res.team_list.size; i++) {
-			existing_team_list[i] = check_team_count_res.team_list.team_list[i];
 			if (strcmp(check_team_count_res.team_list.team_list[i], team_name) == 0)
 				check_name = 0;
 		}

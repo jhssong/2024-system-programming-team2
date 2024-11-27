@@ -44,8 +44,9 @@ void send_schedule_to_server(void) {
         5, update_user_table_req_data
     };
 
-    response update_user_table_res = connect_to_server(update_user_table_req);
-    
+    response_packet update_user_table_response_packet = connect_to_server(update_user_table_req);
+    response update_user_table_res = update_user_table_response_packet.data;
+
     /*
     if (update_user_table_res.msg != NULL && strcmp(update_user_table_res.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
@@ -53,15 +54,17 @@ void send_schedule_to_server(void) {
         }
     }
     */
-       if (update_user_table_res.msg == NULL) {
-#ifdef DEBUG
-        printw("[ERROR] No response from server. Please check your connection.\n");
-        refresh();
-#endif
-        return;
-    }
 
-    if (strcmp(update_user_table_res.msg, "Success") == 0) {
+    /// FIXME the comparison will always evaluate as ‘false’ for the address of ‘msg’ will never be NULL
+//        if (update_user_table_response_packet.msg == NULL) {  
+// #ifdef DEBUG
+//         printw("[ERROR] No response from server. Please check your connection.\n");
+//         refresh();
+// #endif
+//         return;
+//     }
+
+    if (strcmp(update_user_table_response_packet.msg, "Success") == 0) {
         if (sizeof(update_user_table_res.team_table) == sizeof(team_table)) {
             memcpy(team_table, update_user_table_res.team_table, sizeof(team_table));
 #ifdef DEBUG
@@ -76,7 +79,7 @@ void send_schedule_to_server(void) {
         }
     } else {
 #ifdef DEBUG
-        printw("[ERROR] Unknown server response: %s\n", update_user_table_res.msg);
+        printw("[ERROR] Unknown server response: %s\n", update_user_table_response_packet.msg);
         refresh();
 #endif
     }
