@@ -55,9 +55,6 @@ void *handle_client(void *thread_sock) {
 			if (strcmp(result, "Success") == 0) {
 				res.status_code = 200;
 				strcpy(res.msg, "Success");
-
-				// TODO Add response struct here @p1utie
-
 			} else {
 			#ifdef DEBUG
 				printf("[DEBUG] result: %s\n", result);
@@ -162,9 +159,7 @@ void *handle_client(void *thread_sock) {
                 perror("Failed to send user creation response");
             }
 			break;
-			
-			// TODO Add response struct here @p1utie
-			
+
 		case 5: // server receive Personal_Time_Table and send Team_Time_Table to client
 			
 			update_user_table new_user_table;
