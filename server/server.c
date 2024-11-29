@@ -149,8 +149,14 @@ void *handle_client(void *thread_sock) {
 			#endif
 				perror("Failed to create user");
 				res.status_code = 503;
-				strcpy(res.msg, "Failed to create user");
+				strcpy(res.msg, result);
 			}
+
+		#ifdef DEBUG
+			printf("[DEBUG] User Login return\n");
+			printf("[DEBUG] 	status: %d\n", res.status_code);
+			printf("[DEBUG]        msg: %s\n", res.msg);
+		#endif
 
 			if (send(sock, &res, sizeof(response_packet), 0) <= 0) {
                 perror("Failed to send user creation response");
