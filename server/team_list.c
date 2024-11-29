@@ -1,9 +1,21 @@
 #include "team_list.h"
 
 teamlist get_team_list() {
+
+	struct stat statbuf;
+
+	// Check and create TEAM_BASE_DIR
+	if (stat(TEAM_BASE_DIR, &statbuf) == -1) {
+		if ((mkdir(TEAM_BASE_DIR, TEAM_FOLDER_MODE)) < 0) {
+			perror("Error creating team base directory");
+		}
+	} 
+	else if (!S_ISDIR(statbuf.st_mode)) {
+        fprintf(stderr, "TEAM_BASE_DIR is not a directory\n");
+    }
+
 	DIR *dir = opendir("./team");
 	struct dirent *entry;
-	struct stat statbuf;
 	teamlist current_exist_team_list;
 
 	int i = 0;
