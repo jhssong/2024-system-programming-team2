@@ -9,7 +9,6 @@ response_packet connect_to_server(request_packet req) {
 
     sock = socket(PF_INET, SOCK_STREAM, 0);
     if(sock == -1){
-        perror("socket() error");
         exit(EXIT_FAILURE);
     }
 
@@ -19,10 +18,15 @@ response_packet connect_to_server(request_packet req) {
     serv_addr.sin_port = htons(PORT);
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) {
-        perror("Connection failed");
         echo();
         close(sock);
-        return res;
+
+        move(window_height - 1, 0);
+        addstr("Server closed. Press any key to exit...");
+        refresh();
+        getchar();
+        endwin();
+        exit(EXIT_SUCCESS);
     }
     
     received_bytes = recv(sock, &res, sizeof(response_packet), 0);

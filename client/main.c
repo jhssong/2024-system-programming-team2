@@ -64,7 +64,7 @@ int main() {
 				move(window_height - 1, 0);
 				addstr("Press any key to exit...");
 				refresh();
-				getchar();									// TODO Only for debug remove before publish
+				getchar();
 				endwin();									// Turn off curses
 				return 0;
 		}
