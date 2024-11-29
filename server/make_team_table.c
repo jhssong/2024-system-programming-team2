@@ -50,10 +50,14 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
             // Read data from table.bin" 
             size_t read_count = fread(&table[*member_count], sizeof(short), TABLE_MAX_TIME * TABLE_MAX_DAY, file);
             if (read_count != TABLE_MAX_TIME * TABLE_MAX_DAY) {
-                printf("Warning: Incomplete data in table.bin for user %s. Read %zu elements.\n",
-                       entry->d_name, read_count);
+                #ifdef DEBUG
+                    printf("Warning: Incomplete data in table.bin for user %s. Read %zu elements.\n",
+                        entry->d_name, read_count);
+                #endif
             } else {
-                printf("Loaded table.bin for user %s.\n", entry->d_name);
+                #ifdef DEBUG
+                    printf("Loaded table.bin for user %s.\n", entry->d_name);
+                #endif
                 (*member_count)++;
             }
 
@@ -71,7 +75,9 @@ void make_team_table(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], in
 // Function to count the available times for the team based on individual schedules
 void count_available_time(short table[MAX_CLIENTS][TABLE_MAX_TIME][TABLE_MAX_DAY], int member_count, short team_table[TABLE_MAX_TIME][TABLE_MAX_DAY]) {
     if (member_count == 0) {
-        printf("No members to process. Team table will be empty.\n");
+        #ifdef DEBUG
+            printf("No members to process. Team table will be empty.\n");
+        #endif
         return;
     }
 
