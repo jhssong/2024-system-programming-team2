@@ -74,8 +74,8 @@ char* user_login(userinfo *new_user) {
 				if (is_name) {
 				#ifdef DEBUG
 					printf("[DEBUG] Read user name: %s\n", buffer);
-					is_name = 0;
 				#endif
+					is_name = 0;
 				}
 				else {
 				#ifdef DEBUG
