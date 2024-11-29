@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <time.h>
 #include "common.h"
 
 #define TITLE_START_LINE 3

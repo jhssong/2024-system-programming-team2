@@ -23,7 +23,11 @@ int check_window_size() {
 void display_title_bar() {
 	// Show current date on the left
 	move(0, 0);
-	addstr("2024-12-12");
+	 time_t t = time(NULL);
+    struct tm *tm_info = localtime(&t);
+    char date[11];
+    strftime(date, sizeof(date), "%Y-%m-%d", tm_info);
+	addstr(date);
 
 	// Show app name on the middle
 	move(0, window_width / 2 - 2);

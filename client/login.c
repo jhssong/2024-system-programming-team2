@@ -45,10 +45,10 @@ void login() {
 
 #ifdef DEBUG
 	printw("[DEBUG] Requesting login to the team.\n");
-	printw("[TEST] Test name: %s\n", team_info.team_name);
-	printw("[DEBUG]     cmd:  %d\n", team_login_req.cmd);
-	printw("[DEBUG]     name: %s\n", team_login_req.req.team_info.team_name);
-	printw("[DEBUG]     pw:   %s\n", team_login_req.req.team_info.team_pw);
+	printw("[DEBUG] Test name: %s\n", team_info.team_name);
+	printw("[DEBUG]       cmd: %d\n", team_login_req.cmd);
+	printw("[DEBUG]      name: %s\n", team_login_req.req.team_info.team_name);
+	printw("[DEBUG]        pw: %s\n", team_login_req.req.team_info.team_pw);
 	refresh();
 #endif
 
@@ -156,13 +156,14 @@ void login() {
 	printw("[DEBUG]     user name: %s\n", user_login_req.req.user_info.user_name);
 	printw("[DEBUG]     user pw:   %s\n", user_login_req.req.user_info.user_pw);
 	refresh();
+	getch();
 #endif
 
 	response_packet user_login_response_packet = connect_to_server(user_login_req);
 	response user_login_res = user_login_response_packet.data;
 
 #ifdef DEBUG
-	printw("[TEST] return msg: %s\n", user_login_response_packet.msg);
+	printw("[DEBUG] return msg: %s\n", user_login_response_packet.msg);
 	refresh();
 #endif
 
@@ -209,6 +210,7 @@ void login() {
 		printw("[DEBUG]     user name: %s\n", user_login_req.req.user_info.user_name);
 		printw("[DEBUG]     user pw:   %s\n", user_login_req.req.user_info.user_pw);
 		refresh();
+		getch();
 	#endif
 
 		user_login_response_packet = connect_to_server(user_login_req);
