@@ -81,6 +81,7 @@ void send_schedule_to_server(void) {
         #endif
     }
     #ifndef DEBUG   //Don't redraw table when in debug mode: need to check debug message
+        clear();
         draw_table();
     #endif
 }
@@ -101,6 +102,7 @@ void process_input(void) {
         switch (ch) {
             case 'd':
                 show_best_times = !show_best_times;
+                clear();
                 break;
             case KEY_UP:
                 if (cursor_row > 0) cursor_row--;
@@ -125,7 +127,6 @@ void process_input(void) {
 }
 
 void draw_table(void) {
-    clear();
     display_title_bar();
     display_navigation_options_bar();
     print_team_table();
@@ -171,10 +172,9 @@ void table_main(){
     initialize_screen();
 
     signal(SIGALRM, periodic_send);
-
-    
     alarm(10);
 
+    clear();
     process_input();
 
     alarm(0);   //stop alarm
