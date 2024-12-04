@@ -16,7 +16,7 @@ void handle_quit(int signum) {
 	exit(0);
 }
 
-int main() {
+int main(int ac, char* av[]) {
 	signal(SIGINT, handle_quit);
 	signal(SIGQUIT, handle_quit);
 	init_global_variable();
