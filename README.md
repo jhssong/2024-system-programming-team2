@@ -32,6 +32,8 @@ TTT is available on Linux PCs. Windows or macOS devices are not supported yet.
 
 ## 📽 Demo Video Link
 
+[Video Link](https://www.youtube.com/watch?v=g1t8bcB2uR8)
+
 ## 👥 Team Members
 
 <table>
@@ -42,10 +44,10 @@ TTT is available on Linux PCs. Windows or macOS devices are not supported yet.
 <td><a href="https://github.com/p1utie"><img src="https://avatars.githubusercontent.com/u/151902116?v=4" width="128"/></a></td>
 </tr>
 <tr>
-<td>송재훈</td>
-<td>정세엽</td>
-<td>담박인</td>
-<td>최규원</td>
+<td>송재훈(<a href="https://github.com/jhssong">@jhssong</a>)</td>
+<td>정세엽(<a href=https://github.com/clcok">@clcok</a>)</td>
+<td>담박인(<a href="https://github.com/tbl0415">@tbl0415</a>)</td>
+<td>최규원(<a href="https://github.com/p1utie">@p1utie</a>)</td>
 </tr>
 
 </table>
