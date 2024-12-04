@@ -5,6 +5,7 @@ const char* TEAM_NAME_QUESTION = "What is the team name? (max 50 characters)";
 const char* TEAM_PW_QUESTION = "Enter the password for the team (8 characters, alphabet or numeric only)";
 
 int display_create_new_team() {
+	flushinp();
 	clear();
 	display_title_bar();
 	show_title(CREATE_NEW_TEAM_TITLE);
